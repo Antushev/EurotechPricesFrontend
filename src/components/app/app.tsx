@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import history from '../../history';
+import {connect} from 'react-redux';
+
+import {ActionCreator as DataActionCreator} from '../../reducer/data/data.js';
+import {getProducts, getCurrentProductPopup, getFirms, getCurrentFirmPopup} from '../../reducer/data/selectors';
 
 import Main from '../main/main';
 import MainPrices from '../main-prices/main-prices';
@@ -9,11 +12,17 @@ import Header from '../header/header';
 import Footer from '../footer/footer';
 
 interface Props {
+  products: Product[],
+  firms: Firm[],
   menuItems: Menu[]
 }
 
 const App: React.FunctionComponent<Props> = (props: Props) => {
-  const {menuItems} = props;
+  const {
+    menuItems,
+    products,
+    firms
+  } = props;
 
   return (
     <BrowserRouter>
@@ -33,7 +42,10 @@ const App: React.FunctionComponent<Props> = (props: Props) => {
             <Header
               menuItems={menuItems}
             />
-            <MainPrices />
+            <MainPrices
+              products={products}
+              firms={firms}
+            />
             <Footer />
           </div>
         }/>
@@ -52,4 +64,16 @@ const App: React.FunctionComponent<Props> = (props: Props) => {
   );
 };
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    products: getProducts(state),
+    firms: getFirms(state)
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+
+});
+
+export {App};
+export default connect(mapStateToProps, mapDispatchToProps)(App)

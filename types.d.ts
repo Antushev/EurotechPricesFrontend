@@ -1,4 +1,25 @@
+interface Firm {
+  id: number,
+  name: string,
+  site: string
+}
+
+interface Product {
+  id: number,
+  name: string,
+  idAuthor: number,
+  nameAuthor: string,
+  isEmailNotification: boolean,
+  firms: {
+    name: string,
+    price: number,
+    date: string
+  }[]
+}
+
 interface Menu {
   name: string,
   menuLink: string
 }
+
+

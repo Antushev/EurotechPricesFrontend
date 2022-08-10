@@ -6,8 +6,6 @@ interface Props {
 }
 
 const Header: React.FunctionComponent<Props> = (props: Props) => {
-  const {menuItems} = props;
-
   return (
     <header className="page-header">
       <div className="page-header__wrapper container">
@@ -17,9 +15,13 @@ const Header: React.FunctionComponent<Props> = (props: Props) => {
           </div>
 
           <ul className="menu__list">
-            <li  className="menu__item menu__item--active">
-              <Link className="menu__link" to="/">Главная</Link>
+            <li  className="menu__item">
+              <Link className="menu__link" to="/">О сервисе</Link>
+            </li>
+            <li className="menu__item">
               <Link className="menu__link" to="/prices">Цены</Link>
+            </li>
+            <li className="menu__item">
               <Link className="menu__link" to="/stats">Статистика</Link>
             </li>
           </ul>

@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import Header from '../header/header';
+import {Link} from 'react-router-dom';
 
 interface Props {
 
@@ -17,13 +16,13 @@ const Main: React.FunctionComponent<Props> = (props: Props) => {
           <p className="text info-project__text">
             Данный сервис предназначен для отслеживания цен компаний-конкурентов ООО ЕВРОТЕК по различным видам продукции.
             Все номенклатурные позиции, по которым отслеживается изменение цены у компании-конкурентов можно посмотреть в
-            разделе <a className="link" href="prices.html">«Цены»</a> меню. Также в данном разделе можно добавить
+            разделе <Link className="link" to="/prices">«Цены»</Link> меню. Также в данном разделе можно добавить
             дополнительные номенклатурные позиции, чтобы отслеживать по ним цены.
           </p>
 
           <p className="text info-project__text">
             Помимо этого ведется статистика по отслеживаемым ценам номенклатурных позиций, которую можно посмотреть в
-            разделе <a className="link" href="stat.html">«Статистика»</a> меню.
+            разделе <Link className="link" to="/stats">«Статистика»</Link> меню.
           </p>
         </section>
 
