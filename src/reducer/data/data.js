@@ -1,61 +1,17 @@
+import {DateTime} from 'luxon';
+
 const initialState = {
+  isLoadingStart: false,
   isLoadingProduct: false,
+  isLoadingFirm: false,
+  isLoadingPrice: false,
+
   products: [
     {
       id: 1,
       idAuthor: 4,
       name: 'Распределитель 1P40',
-      isEmailNotification: true,
-      firms: [
-        {
-          name: 'ЕВРОТЕК',
-          price: 3289.15,
-          date: '25.07.2022',
-          link: 'example.com/add'
-        },
-        {
-          name: 'ПРОМСНАБ',
-          price: 3984.1,
-          date: '25.07.2022',
-          link: 'example.com/add'
-        },
-        {
-          name: 'АТМГ',
-          price: 9800,
-          date: '25.07.2022',
-          link: 'example.com/add'
-        },
-        {
-          name: 'RM316',
-          price: null,
-          date: '25.07.2022',
-          link: 'example.com/add'
-        },
-        {
-          name: 'Гидроэл',
-          price: null,
-          date: '25.07.2022',
-          link: 'example.com/add'
-        },
-        {
-          name: 'Ингидро',
-          price: null,
-          date: '25.07.2022',
-          link: 'example.com/add'
-        },
-        {
-          name: 'Гидроулей',
-          price: null,
-          date: '25.07.2022',
-          link: 'example.com/add'
-        },
-        {
-          name: 'Пневмакс',
-          price: 4011.84,
-          date: '25.07.2022',
-          link: 'example.com/add'
-        }
-      ]
+      dateCreate: '10-08-2022'
     }
   ],
   currentProducts: [],
@@ -63,66 +19,15 @@ const initialState = {
     id: 1,
     idAuthor: 4,
     name: 'Распределитель 1P40',
-    isEmailNotification: true,
-    firms: [
-      {
-        name: 'ЕВРОТЕК',
-        price: 3289.15,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'ПРОМСНАБ',
-        price: 3984.1,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'АТМГ',
-        price: 9800,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'RM316',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроэл',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Ингидро',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроулей',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Пневмакс',
-        price: 4011.84,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      }
-    ]
+    isEmailNotification: true
   },
 
-  isLoadingFirm: false,
   firms: [
     {
       id: 1,
       name: 'ЕВРОТЕК',
       site: 'eurotechspb.com',
-      date_create: '2022-08-10'
+      dateCreate: '10-08-2022'
     }
   ],
   currentFirmPopup: {
@@ -134,10 +39,10 @@ const initialState = {
   prices: [
     {
       id: 1,
-      idFirm: 1,
       idProduct: 1,
+      idFirm: 1,
       idLink: 1,
-      price: 1415,
+      price: 2150,
       count: 14,
       dateParse: '10-08-2022'
     }
@@ -155,25 +60,32 @@ const initialState = {
 }
 
 const ActionType = {
-  ADD_FIRM_IN_PRODUCT: 'ADD_FIRM_IN_PRODUCT',
+  SET_IS_LOADING_START: 'SET_IS_LOADING_START',
+
   LOAD_PRODUCTS: 'LOAD_PRODUCTS',
   SET_CURRENT_PRODUCT_POPUP: 'SET_CURRENT_PRODUCT_POPUP',
-  SET_EMAIL_NOTIFICATION_PRODUCT: 'SET_EMAIL_NOTIFICATION_PRODUCT',
   SET_IS_LOADING_PRODUCT: 'SET_IS_LOADING_PRODUCT',
 
   LOAD_FIRMS: 'LOAD_FIRMS',
   SET_CURRENT_FIRM_POPUP: 'SET_CURRENT_FIRM_POPUP',
   SET_FIRM_IN_PRODUCT: 'SET_FIRM_IN_PRODUCT',
-  SET_IS_LOADING_FIRM: 'IS_LOADING_FIRM'
+  SET_IS_LOADING_FIRM: 'SET_IS_LOADING_FIRM',
+
+  LOAD_PRICES: 'LOAD_PRICES',
+  ADD_PRICE: 'ADD_PRICE',
+  SET_IS_LOADING_PRICE: 'SET_IS_LOAD_PRICE',
+
+  LOAD_LINKS: 'LOAD_LINKS'
 }
 
 const ActionCreator = {
-  addFirmInProduct(firm) {
+  setIsLoadingStart() {
     return {
-      type: ActionType.ADD_FIRM_IN_PRODUCT,
-      payload: firm
+      type: ActionType.SET_IS_LOADING_START,
+      payload: false
     }
   },
+
   loadProducts(products) {
     return {
       type: ActionType.LOAD_PRODUCTS,
@@ -183,12 +95,6 @@ const ActionCreator = {
   setCurrentProductPopup(product) {
     return {
       type: ActionType.SET_CURRENT_PRODUCT_POPUP,
-      payload: product
-    }
-  },
-  setEmailNotificationProduct(product) {
-    return {
-      type: ActionType.SET_EMAIL_NOTIFICATION_PRODUCT,
       payload: product
     }
   },
@@ -213,19 +119,55 @@ const ActionCreator = {
   },
   setIsLoadingFirm() {
     return {
-      type: ActionType.IS_LOADING_FIRM,
+      type: ActionType.SET_IS_LOADING_FIRM,
       payload: true
+    }
+  },
+
+  loadPrices(prices) {
+    return {
+      type: ActionType.LOAD_PRICES,
+      payload: prices
+    }
+  },
+  setIsLoadingPrice() {
+    return {
+      type: ActionType.SET_IS_LOADING_PRICE,
+      payload: null
+    }
+  },
+
+  loadLinks(links) {
+    return {
+      type: ActionType.LOAD_LINKS,
+      payload: links
     }
   }
 }
 
 const Operation = {
+  loadProducts: () => (dispatch, getState, api) => {
+    dispatch(ActionCreator.setIsLoadingStart());
+    api.get('/products')
+      .then((response) => {
+        const products = response.data;
+
+        dispatch(ActionCreator.loadProducts(products));
+        dispatch(ActionCreator.setIsLoadingStart());
+      })
+      .catch((error) => {
+        throw error;
+      })
+  },
   addProduct: (name, idAuthor) => (dispatch, getState, api) => {
     dispatch(ActionCreator.setIsLoadingProduct());
     api.post('/product', {
       name: name,
       idAuthor: idAuthor
     })
+      .then(() => {
+        dispatch(Operation.loadProducts());
+      })
       .then(() => {
         dispatch(ActionCreator.setIsLoadingProduct());
       })
@@ -235,17 +177,16 @@ const Operation = {
   },
 
   loadFirms: () => (dispatch, getState, api) => {
-    return api.get('/firm')
+    return api.get('/firms')
       .then((response) => {
-        console.log(response.data);
+        const firms = response.data;
 
-        dispatch(ActionCreator.loadFirms(response.data));
+        dispatch(ActionCreator.loadFirms(firms));
       })
       .catch((error) => {
         throw error;
       })
   },
-
   addFirm: (firm) => (dispatch, getState, api) => {
     dispatch(ActionCreator.setIsLoadingFirm());
     return api.post('/firm', {
@@ -263,30 +204,58 @@ const Operation = {
       .catch((error) => {
         throw error;
       })
+  },
+
+  loadPrices: (date) => (dispatch, getState, api) => {
+    return api.get(`/prices/${date}`)
+      .then((response) => {
+        const prices = response.data;
+
+        dispatch(ActionCreator.loadPrices(prices));
+      })
+      .catch((error) => {
+        throw error;
+      })
+  },
+  addPrice: (idFirm, idProduct, link, price, count) => (dispatch, getState, api) => {
+    dispatch(ActionCreator.setIsLoadingPrice());
+    return api.post('/price', {
+      idFirm: idFirm,
+      idProduct: idProduct,
+      link: link,
+      price: price,
+      count: count
+    })
+      .then(() => {
+        dispatch(ActionCreator.setIsLoadingPrice());
+        const nowDate = DateTime.local().toFormat('y-MM-dd');
+
+        dispatch(Operation.loadPrices(nowDate));
+        dispatch(Operation.loadLinks());
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  },
+
+  loadLinks: () => (dispatch, getState, api) => {
+    return api.get('/links')
+      .then((response) => {
+        const links = response.data;
+        dispatch(ActionCreator.loadLinks(links));
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ActionType.ADD_FIRM_IN_PRODUCT:
-      const products = state.products;
-      const currentProducts = state.currentProducts;
-      const newFirm = action.payload;
-
-      products.forEach((product) => {
-        product.firms.push(newFirm);
-      });
-
-      currentProducts.forEach((product) => {
-        product.firms.push(newFirm);
-      })
-
-      console.log(products);
-
+    case ActionType.SET_IS_LOADING_START:
       return Object.assign({}, state, {
-        products: products,
-        currentProducts: currentProducts
-      });
+        isLoadingStart: !state.isLoadingStart
+      })
     case ActionType.LOAD_PRODUCTS:
       return Object.assign({}, state, {
         products: action.payload,
@@ -295,10 +264,6 @@ const reducer = (state = initialState, action) => {
     case ActionType.SET_CURRENT_PRODUCT_POPUP:
       return Object.assign({}, state, {
         currentProductPopup: action.payload
-      })
-    case ActionType.SET_EMAIL_NOTIFICATION_PRODUCT:
-      return Object.assign({}, state, {
-        isEmailNotification: !state.currentProductPopup.isEmailNotification
       })
     case ActionType.SET_IS_LOADING_PRODUCT:
       return Object.assign({}, state, {
@@ -315,6 +280,18 @@ const reducer = (state = initialState, action) => {
     case ActionType.SET_IS_LOADING_FIRM:
       return Object.assign({}, state, {
         isLoadingFirm: !state.isLoadingFirm
+      })
+    case ActionType.LOAD_PRICES:
+      return Object.assign({}, state, {
+        prices: action.payload
+      })
+    case ActionType.SET_IS_LOADING_PRICE:
+      return Object.assign({}, state, {
+        isLoadingPrice: !state.isLoadingPrice
+      })
+    case ActionType.LOAD_LINKS:
+      return Object.assign({}, state, {
+        links: action.payload
       })
   }
 

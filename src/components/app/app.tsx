@@ -3,7 +3,12 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import {ActionCreator as DataActionCreator} from '../../reducer/data/data.js';
-import {getProducts, getCurrentProductPopup, getFirms, getCurrentFirmPopup} from '../../reducer/data/selectors';
+import {
+  getProducts,
+  getFirms,
+  getPrices,
+  getLinks
+} from '../../reducer/data/selectors';
 
 import Main from '../main/main';
 import MainPrices from '../main-prices/main-prices';
@@ -14,6 +19,8 @@ import Footer from '../footer/footer';
 interface Props {
   products: Product[],
   firms: Firm[],
+  prices: Price[],
+  links: Link[],
   menuItems: Menu[]
 }
 
@@ -21,7 +28,9 @@ const App: React.FunctionComponent<Props> = (props: Props) => {
   const {
     menuItems,
     products,
-    firms
+    firms,
+    prices,
+    links
   } = props;
 
   return (
@@ -45,6 +54,8 @@ const App: React.FunctionComponent<Props> = (props: Props) => {
             <MainPrices
               products={products}
               firms={firms}
+              links={links}
+              prices={prices}
             />
             <Footer />
           </div>
@@ -67,7 +78,9 @@ const App: React.FunctionComponent<Props> = (props: Props) => {
 const mapStateToProps = (state) => {
   return {
     products: getProducts(state),
-    firms: getFirms(state)
+    firms: getFirms(state),
+    prices: getPrices(state),
+    links: getLinks(state)
   }
 }
 

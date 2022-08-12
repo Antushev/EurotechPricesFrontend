@@ -29,8 +29,6 @@ const PopupAddGood: React.FunctionComponent<Props> = (props: Props) => {
     onButtonAddProductClick
   } = props;
 
-  console.log(isLoadingProduct);
-
   const [name, setName] = useState('');
   const [stateForm, setStateForm] = useState(StateForm.START);
 
@@ -73,6 +71,7 @@ const PopupAddGood: React.FunctionComponent<Props> = (props: Props) => {
             placeholder="Введите название товара"
             onChange={(evt) => {
               setName(evt.target.value)
+              setStateForm(StateForm.START);
             }}
           />
         </div>
@@ -88,15 +87,28 @@ const PopupAddGood: React.FunctionComponent<Props> = (props: Props) => {
           : ''
         }
 
+        {stateForm === StateForm.SUCCESS
+          ? <div className="popup-price__price-wrapper popup-price__container">
+            <div className="popup-price__info">
+              <p>
+                Товар <b>{name}</b> успешно добавлен!
+                Его можно найти в общей таблице товаров.
+                Закройте окно или добавьте ещё один товар.
+              </p>
+            </div>
+          </div>
+          : ''
+        }
+
         <button
           className="button popup-good__button"
           onClick={(evt) => {
             evt.preventDefault();
-
-
-
             if (name !== '') {
               onButtonAddProductClick(name, 1);
+
+              setStateForm(StateForm.SUCCESS)
+              setName('');
             } else {
               setStateForm(StateForm.ERROR);
             }

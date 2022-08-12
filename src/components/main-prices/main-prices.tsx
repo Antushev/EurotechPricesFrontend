@@ -2,8 +2,13 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {DateTime} from 'luxon';
 
+import {Operation as DataOperation} from '../../reducer/data/data.js';
 import {ActionCreator as DataActionCreator} from '../../reducer/data/data.js';
-import {getCurrentFirmPopup, getCurrentProductPopup} from '../../reducer/data/selectors.js';
+import {
+  getCurrentFirmPopup,
+  getCurrentProductPopup,
+  getIsLoadingStart
+} from '../../reducer/data/selectors.js';
 
 import TablePrice from '../table-price/table-price';
 import PopupAddCompany from '../popup-add-company/popup-add-company';
@@ -13,20 +18,29 @@ import PopupAddPrice from '../popup-add-price/popup-add-price';
 interface Props {
   products: Product[],
   firms: Firm[],
+  links: Link[],
+  prices: Price[],
   currentProductPopup: Product,
   currentFirmPopup: Firm,
+  isLoadingStart: boolean,
   setCurrentProductPopup: (product: Product) => void,
-  setCurrentFirmPopup: (any) => void
+  setCurrentFirmPopup: (any) => void,
+  onButtonDateClick: (date: string) => void
 }
 
 const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
   const {
     products,
     firms,
+    prices,
+    links,
     currentProductPopup,
     currentFirmPopup,
+    isLoadingStart,
     setCurrentFirmPopup,
-    setCurrentProductPopup} = props;
+    setCurrentProductPopup,
+    onButtonDateClick
+  } = props;
 
   const [isShowPopupCompany, setShowPopupCompany] = useState(false);
   const [isShowPopupGood, setShowPopupGood] = useState(false);
@@ -80,7 +94,10 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
                   type="date"
                   value={dateSearch}
                   onChange={(evt) => {
-                    setDateSearch(evt.target.value);
+                    const date = evt.target.value;
+
+                    setDateSearch(date);
+                    onButtonDateClick(date);
                   }}
                 />
               </div>
@@ -119,10 +136,16 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
               <TablePrice
                 firms={firms}
                 products={filtersProduct}
+                prices={prices}
+                links={links}
+                isLoadingStart={isLoadingStart}
                 onButtonAddPriceClick={(evt, product, firm) => {
                   setCurrentProductPopup(product);
                   setCurrentFirmPopup(firm);
                   setShowPopupPrice(!isShowPopupPrice);
+
+                  setDateSearch(nowDate);
+                  onButtonDateClick(nowDate);
                 }}
               />
             </div>
@@ -168,7 +191,8 @@ const acceptFilter = (products, textSearch) => {
 const mapStateToProps = (state) => {
   return {
     currentProductPopup: getCurrentProductPopup(state),
-    currentFirmPopup: getCurrentFirmPopup(state)
+    currentFirmPopup: getCurrentFirmPopup(state),
+    isLoadingStart: getIsLoadingStart(state)
   }
 }
 
@@ -178,6 +202,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setCurrentFirmPopup(firm) {
     dispatch(DataActionCreator.setCurrentFirmPopup(firm))
+  },
+  onButtonDateClick(date) {
+    dispatch(DataOperation.loadPrices(date));
   }
 })
 

@@ -1,230 +1,51 @@
 const products = [
   {
     id: 1,
-    name: 'Распределитель 1P40',
     idAuthor: 4,
-    nameAuthor: 'Дмитрий Антушев',
-    firms: [
-      {
-        name: 'ЕВРОТЕК',
-        price: 3289.15,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'ПРОМСНАБ',
-        price: 3984.1,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'АТМГ',
-        price: 9800,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'RM316',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроэл',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Ингидро',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроулей',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Пневмакс',
-        price: 4011.84,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      }
-    ]
+    name: 'Распределитель 1P40',
+    dateCreate: '10-08-2022'
   },
   {
     id: 2,
-    name: 'Фильтр HEK301',
     idAuthor: 4,
-    nameAuthor: 'Светлана Павлова',
-    isEmailNotification: false,
-    firms: [
-      {
-        name: 'ЕВРОТЕК',
-        price: 1981.11,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'ПРОМСНАБ',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'АТМГ',
-        price: 1811.15,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'RM316',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроэл',
-        price: 2341.34,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Ингидро',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроулей',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Пневмакс',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      }
-    ]
+    name: 'Фильтр HEK301',
+    dateCreate: '10-08-2022'
   },
   {
     id: 3,
     name: 'Комплект уплотнений Р/к 4891',
     idAuthor: 4,
-    nameAuthor: 'Жанна Турчанова',
-    isEmailNotification: false,
-    firms: [
-      {
-        name: 'ЕВРОТЕК',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'ПРОМСНАБ',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'АТМГ',
-        price: 9800,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'RM316',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроэл',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Ингидро',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроулей',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Пневмакс',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      }
-    ]
+    dateCreate: '10-08-2022'
   },
   {
     id: 4,
-    name: 'Клапан VRA SE',
     idAuthor: 4,
-    nameAuthor: 'Максим Олькин',
-    isEmailNotification: false,
-    firms: [
-      {
-        name: 'ЕВРОТЕК',
-        price: 5000,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'ПРОМСНАБ',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'АТМГ',
-        price: 9800,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'RM316',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроэл',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Ингидро',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Гидроулей',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      },
-      {
-        name: 'Пневмакс',
-        price: null,
-        date: '25.07.2022',
-        link: 'example.com/add'
-      }
-    ]
+    name: 'Клапан VRA SE',
+    dateCreate: '10-08-2022'
+  },
+  {
+    id: 5,
+    idAuthor: 1,
+    name: 'Распределитель 1P80',
+    dateCreate: '10-08-2022'
+  },
+  {
+    id: 6,
+    idAuthor: 1,
+    name: 'Распределитель 2P40',
+    dateCreate: '10-08-2022'
+  },
+  {
+    id: 7,
+    idAuthor: 1,
+    name: 'Распределитель 3P40',
+    dateCreate: '10-08-2022'
+  },
+  {
+    id: 8,
+    idAuthor: 1,
+    name: 'Распределитель 4P40',
+    dateCreate: '10-08-2022'
   }
 ];
 

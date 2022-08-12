@@ -1,5 +1,5 @@
 const getPrice = (api, link) => {
-  return api.post('/price', {
+  return api.post('/parser', {
     link: link
   })
     .then((res) => {

@@ -1,31 +1,47 @@
 import React, {useState, useEffect} from 'react';
+import {connect} from 'react-redux';
+import {DateTime} from 'luxon';
 
 import {api} from '../../index';
+
+import {Operation as DataOperation} from './../../reducer/data/data';
+import {getIsLoadingPrice} from './../../reducer/data/selectors'
 
 import {getPrice} from '../../utils/common';
 
 const StateForm = {
   START: 1,
   GET_PRICE: 2,
-  ERROR: 3
+  SEARCH_PRICE: 3,
+  ERROR: 4,
+  ERROR_LINK: 5,
+  SUCCESS: 6
 }
 
 interface Props {
   currentProductPopup: Product,
   currentFirmPopup: Firm,
   isShowPopup: boolean,
-  onClosePopupClick: () => void
+  isLoadingPrice: boolean,
+  onClosePopupClick: () => void,
+  onButtonAddPriceClick: (idFilm: number, idProduct: number, link: string, price: number, count: number) => void
 }
 
 const PopupAddPrice: React.FunctionComponent<Props> = (props: Props) => {
-  const {currentProductPopup, currentFirmPopup, isShowPopup, onClosePopupClick} = props;
-
-  const currentFirmProduct = getCurrentFirm(currentProductPopup, currentFirmPopup);
+  const {
+    currentProductPopup,
+    currentFirmPopup,
+    isShowPopup,
+    isLoadingPrice,
+    onClosePopupClick,
+    onButtonAddPriceClick
+  } = props;
 
   const [stateForm, setStateForm] = useState(StateForm.START);
 
   const [link, setLink] = useState('');
   const [price, setPrice] = useState(0);
+  const [count, setCount] = useState(0);
 
   return (
     <div
@@ -57,7 +73,7 @@ const PopupAddPrice: React.FunctionComponent<Props> = (props: Props) => {
           </li>
           <li className="popup-price__item">
             Сайт конкурента:
-            <a className="link" href={currentFirmPopup.site}> {currentFirmPopup.site}</a>
+            <a className="link" href={'https://' + currentFirmPopup.site}> {currentFirmPopup.site}</a>
            </li>
           <li className="popup-price__item">
             Сопоставляемый товар: <span className="popup-price__span">{currentProductPopup.name}</span>
@@ -88,52 +104,65 @@ const PopupAddPrice: React.FunctionComponent<Props> = (props: Props) => {
         {/*</div>*/}
 
         <div className="popup-price__link-wrapper popup-price__container">
-          <h2 className="header header--2">Добавьте ссылку на товар с сайта конкурента</h2>
-          <label className="popup-price__label popup-price__label--link" htmlFor="add-info">
-            Ссылка может вести на товар конкурента на его сайте или же на товар из маркетплейса (например, Ozon).
-            На один отслеживаемый товар может вести только одна ссылка на товар компании-конкурента.
-          </label>
-          <p>
-            Ссылка должна начинаться со следующего адреса: <b>{currentFirmPopup.site}</b>
-          </p>
+          {stateForm !== StateForm.SUCCESS
+          ?<div>
+              <h2 className="header header--2">Добавьте ссылку на товар с сайта конкурента</h2>
+              <label className="popup-price__label popup-price__label--link" htmlFor="add-info">
+                Ссылка может вести на товар конкурента на его сайте или же на товар из маркетплейса (например, Ozon).
+                На один отслеживаемый товар может вести только одна ссылка на товар компании-конкурента.
+              </label>
+              <p>
+                Ссылка должна начинаться со следующего адреса: <b>{currentFirmPopup.site}</b>
+              </p>
+            </div>
+            : ''
+          }
+
           <div className="popup-price__link-inner">
             <input className="input popup-price__input"
                    id="add-info"
                    name="popup-link"
                    type="text"
                    value={link}
+                   disabled={stateForm === StateForm.SUCCESS}
                    alt="Ссылка на товар с сайта конкурента"
                    placeholder="Ссылка на товар с сайта конкурента"
                    onChange={(evt) => {
                     const currentLink = evt.target.value;
                     setLink(currentLink);
-
-                    if (currentLink === '') {
-                      setStateForm(1);
-                    }
+                    setStateForm(StateForm.START);
                    }}
             />
-              <button
+
+            {stateForm !== StateForm.SUCCESS
+            ? <button
                 className="button popup-price__button-link"
                 type="button"
-                disabled={stateForm === 4}
+                disabled={stateForm === StateForm.SEARCH_PRICE}
                 onClick={() => {
-                  const isLinkByCurrentFirm = isLinkByFirm(link, currentFirmPopup);
-                  setStateForm(4);
+                  setStateForm(StateForm.SEARCH_PRICE);
                   getPrice(api, link)
                     .then((res) => {
                       setPrice(res.price);
+                      setCount(res.count);
 
-                      if (link !== '' && price !== 0) {
-                        setStateForm(2);
+                      const isLinkInCompany = isLinkByCompanySite(link, currentFirmPopup);
+
+                      if (!isLinkInCompany) {
+                        setStateForm(StateForm.ERROR_LINK);
+                      } else if (link === '' || Number(price) === 0) {
+                        setStateForm(StateForm.ERROR);
                       } else {
-                        setStateForm(3);
+                        setStateForm(StateForm.GET_PRICE);
                       }
                     });
                 }}
               >
-                {stateForm !== 4 ? 'Проверить' : 'Анализ...'}
+                {stateForm !== StateForm.SEARCH_PRICE ? 'Проверить' : 'Анализ...'}
               </button>
+              : ''
+            }
+
           </div>
         </div>
 
@@ -152,9 +181,12 @@ const PopupAddPrice: React.FunctionComponent<Props> = (props: Props) => {
             <div className="popup-price__find-price">
               Найденная цена: <b>{price}</b>
             </div>
+            <div className="popup-price__find-price">
+              Найденное количество: <b>{count !== null ? count : 'не указано'}</b>
+            </div>
             <div className="popup-price__info">
               <p>
-                Если цена найдена верно, то нажмите кнопку "Применить", в противном случае введите другую ссылку.
+                Если цена и количество найдены верно, то нажмите кнопку "Применить", в противном случае введите другую ссылку.
               </p>
               <p>
                 В дальнейшем цена по ссылке будет загружаться автоматически.
@@ -166,10 +198,41 @@ const PopupAddPrice: React.FunctionComponent<Props> = (props: Props) => {
 
         {stateForm === StateForm.ERROR
           ? <div className="popup-price__price-wrapper popup-price__container">
-            <h2 className="header header--2">Выберите цену для отслеживания</h2>
             <div className="popup-price__info">
               <p>
-                Не найдена цена по указанной ссылке. Укажите другую ссылку.
+                Не найдена цена по указанной ссылке. Попробуйте запустить проверку снова.
+                Если повторная проверка не дала результата, то укажите другую ссылку.
+              </p>
+            </div>
+          </div>
+          : ''
+        }
+
+        {stateForm === StateForm.ERROR_LINK
+          ? <div className="popup-price__price-wrapper popup-price__container">
+            <div className="popup-price__info">
+              <p>
+                Указанная ссылка не ведет на сайт <b>{currentFirmPopup.site}</b>
+              </p>
+              <p>
+                Пожалуйста, исправьте ссылку и повторите проверку.
+              </p>
+            </div>
+          </div>
+          : ''
+        }
+
+        {stateForm === StateForm.SUCCESS
+          ? <div className="popup-price__price-wrapper popup-price__container">
+            <div className="popup-price__info">
+              <p>
+                <i>Начальная цена</i>, <i>начальное количество</i> и <i>ссылка</i> на товар успешно добавлены на {DateTime.local().toFormat('dd.MM.y')}.
+              </p>
+              <p>
+                В дальнейшем цена будет обновляться автоматически раз в <b>час</b>.
+              </p>
+              <p>
+                Форму можно закрыть.
               </p>
             </div>
           </div>
@@ -177,7 +240,25 @@ const PopupAddPrice: React.FunctionComponent<Props> = (props: Props) => {
         }
 
         {stateForm === StateForm.GET_PRICE
-          ? <button className="popup-price__button button" type="submit">Применить</button>
+          ? <button
+            className="popup-price__button button"
+            type="submit"
+            onClick={(evt) => {
+              evt.preventDefault();
+
+              onButtonAddPriceClick(
+                currentFirmPopup.id,
+                currentProductPopup.id,
+                link,
+                price,
+                0
+              );
+
+              setStateForm(StateForm.SUCCESS);
+            }}
+          >
+            {isLoadingPrice ? 'Идет загрузка...' : 'Применить'}
+        </button>
           : ''
         }
 
@@ -187,15 +268,32 @@ const PopupAddPrice: React.FunctionComponent<Props> = (props: Props) => {
 }
 
 const getCurrentFirm = (product, firm) => {
-  if (product !== null) {
+  if (product.firms) {
     return product.firms.find((firmProduct) => {
       return firmProduct.name === firm.name;
     });
   }
 }
 
-const isLinkByFirm = (link, firm) => {
-  return firm.site.includes(link);
+
+const isLinkByCompanySite = (link, firm) => {
+  const siteFirm = firm.site.trim();
+
+  return link.includes(siteFirm);
 }
 
-export default PopupAddPrice;
+
+const mapStateToProps = (state) => {
+  return {
+    isLoadingPrice: getIsLoadingPrice(state)
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  onButtonAddPriceClick(idFirm, idProduct, idLink, price, count) {
+    dispatch(DataOperation.addPrice(idFirm, idProduct, idLink, price, count));
+  }
+});
+
+export {PopupAddPrice};
+export default connect(mapStateToProps, mapDispatchToProps)(PopupAddPrice);

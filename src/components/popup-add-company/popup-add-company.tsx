@@ -71,7 +71,10 @@ const PopupAddCompany: React.FunctionComponent<Props> = (props: Props) => {
             }}
           />
             <label className="popup-company__label popup-company__label--check" htmlFor="popup-link-site">
-              Скопируйте ссылку на главную страницу интернет-магазина компании конкурента.
+              <p>Скопируйте ссылку на главную страницу интернет-магазина компании конкурента.</p>
+              <p>Ссылка не должна содержать протокол 'https://' или 'http://', а также 'www' в самом начале</p>
+              <p>Верная ссылка: eurotechspb.com</p>
+              <p>Неверная ссылка: https://eurotechspb.com или www.eurotechspb.com</p>
             </label>
             <input
               className="input popup-company__input"
@@ -106,9 +109,11 @@ const PopupAddCompany: React.FunctionComponent<Props> = (props: Props) => {
           evt.preventDefault();
 
           if (name !== '' && site !== '') {
+            const validSite = validSiteFirm(site);
+
             const firm = {
               name,
-              site
+              site: validSite
             }
             onButtonAddFirmClick(firm);
           } else {
@@ -121,6 +126,10 @@ const PopupAddCompany: React.FunctionComponent<Props> = (props: Props) => {
     </div>
   );
 };
+
+const validSiteFirm = (site) => {
+  return site.trim().replace('https://', "").replace('/', "").replace('www.', "");
+}
 
 const mapStateToProps = (state) => {
   return {

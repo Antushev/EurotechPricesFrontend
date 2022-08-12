@@ -22,4 +22,22 @@ interface Menu {
   menuLink: string
 }
 
+interface Link {
+  id: number,
+  idFirm: number,
+  idProduct: number,
+  link: string,
+  dateCreate: string
+}
+
+interface Price {
+  id: number,
+  idFirm: number,
+  idProduct: number,
+  idLink: number,
+  price: number,
+  count: number,
+  dateParse: string
+}
+
 
