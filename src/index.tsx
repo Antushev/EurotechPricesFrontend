@@ -7,9 +7,12 @@ import reducer from './reducer/reducer.js';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {DateTime} from 'luxon';
 
-import {createApi} from './api.js';
-import {getUserEurotech} from './utils/common.js';
+import {AuthorizationStatus} from './utils/const.js';
 
+import {createApi} from './api.js';
+
+import {Operation as UserOperation} from './reducer/user/user.js';
+import {ActionCreator as UserActionCreator} from './reducer/user/user.js';
 import {ActionCreator as DataActionCreator} from './reducer/data/data.js';
 import {Operation as DataOperation} from './reducer/data/data.js';
 
@@ -40,12 +43,27 @@ const init = () => {
   );
 };
 
+// АВТОРИЗАЦИЯ ПЕРЕДЕЛАТ
+if (
+  localStorage.getItem('authorizationStatus') === null
+  || localStorage.getItem('authorizationStatus') === AuthorizationStatus.NO_AUTH
+) {
+  localStorage.setItem('authorizationStatus', AuthorizationStatus.NO_AUTH);
+  store.dispatch(UserActionCreator.setAuthorizationStatus(AuthorizationStatus.NO_AUTH));
+}
 
+if (localStorage.getItem('authorizationStatus') === AuthorizationStatus.AUTH) {
+  const idUser = localStorage.getItem('idUser');
+
+  store.dispatch(UserOperation.getUserInfo(idUser));
+}
+// АВТОРИЗАЦИЯ ПЕРЕДЕЛАТЬ
 
 store.dispatch(DataOperation.loadPrices(DateTime.local().toFormat('y-MM-dd')));
 store.dispatch(DataOperation.loadProducts());
 store.dispatch(DataOperation.loadFirms());
 store.dispatch(DataOperation.loadLinks());
+
 
 init();
 

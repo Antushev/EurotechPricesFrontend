@@ -2,6 +2,8 @@ import * as React from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {connect} from 'react-redux';
 
+import {Operation as UserOperation} from '../../reducer/user/user.js';
+import {getUser} from '../../reducer/user/selectors';
 import {ActionCreator as DataActionCreator} from '../../reducer/data/data.js';
 import {
   getProducts,
@@ -10,6 +12,9 @@ import {
   getLinks
 } from '../../reducer/data/selectors';
 
+import Auth from '../auth/auth';
+import AuthRoute from '../auth-route/auth-route';
+import PrivateRoute from '../private-route/private-route';
 import Main from '../main/main';
 import MainPrices from '../main-prices/main-prices';
 import MainStats from '../main-stats/main-stats';
@@ -30,24 +35,31 @@ const App: React.FunctionComponent<Props> = (props: Props) => {
     products,
     firms,
     prices,
-    links
+    links,
   } = props;
 
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/auth" element={
+          <AuthRoute>
+            <Auth />
+          </AuthRoute>
+        }
+        />
+
         <Route path="/" element={
-          <div>
+          <PrivateRoute>
             <Header
               menuItems={menuItems}
             />
             <Main />
             <Footer />
-          </div>
+          </PrivateRoute>
         }/>
 
         <Route path="/prices" element={
-          <div>
+          <PrivateRoute>
             <Header
               menuItems={menuItems}
             />
@@ -58,17 +70,17 @@ const App: React.FunctionComponent<Props> = (props: Props) => {
               prices={prices}
             />
             <Footer />
-          </div>
+          </PrivateRoute>
         }/>
 
         <Route path="/stats" element={
-          <div>
+          <PrivateRoute>
             <Header
               menuItems={menuItems}
             />
             <MainStats />
             <Footer />
-          </div>
+          </PrivateRoute>
         }/>
       </Routes>
     </BrowserRouter>

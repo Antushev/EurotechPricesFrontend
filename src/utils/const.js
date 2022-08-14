@@ -10,4 +10,9 @@ const TypeScreen = {
   STATS: 'STATS'
 }
 
-export {AppRote, TypeScreen};
+const AuthorizationStatus = {
+  AUTH: 'AUTH',
+  NO_AUTH: 'NO_AUTH'
+}
+
+export {AppRote, TypeScreen, AuthorizationStatus};

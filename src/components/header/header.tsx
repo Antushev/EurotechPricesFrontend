@@ -1,11 +1,23 @@
 import * as React from 'react';
+import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import {AuthorizationStatus} from '../../utils/const.js';
+
+import {ActionCreator as UserActionCreator} from '../../reducer/user/user.js';
+import {getUser} from '../../reducer/user/selectors';
 
 interface Props {
-  menuItems: Menu[]
+  menuItems: Menu[],
+  user: any,
+  onButtonExitUserClick: () => void
 }
 
 const Header: React.FunctionComponent<Props> = (props: Props) => {
+  const {
+    user,
+    onButtonExitUserClick
+  } = props;
+
   return (
     <header className="page-header">
       <div className="page-header__wrapper container">
@@ -27,8 +39,15 @@ const Header: React.FunctionComponent<Props> = (props: Props) => {
           </ul>
 
           <div className="menu__login">
-            <a className="menu__link-login" href="#">Светлана Павлова</a>
-            <button className="menu__link-login menu__link-login--exit">Выход</button>
+            <a className="menu__link-login" href="#">{user.firstName + ' ' + user.lastName}</a>
+            <button
+              className="menu__link-login menu__link-login--exit"
+              onClick={() => {
+                onButtonExitUserClick();
+              }}
+            >
+              Выход
+            </button>
           </div>
         </nav>
       </div>
@@ -46,4 +65,22 @@ const Header: React.FunctionComponent<Props> = (props: Props) => {
 //   });
 // }
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    user: getUser(state)
+  }
+}
+
+// АВТОРИЗАЦИЯ ПЕРЕДЕЛАТЬ
+const mapDispatchToProps = (dispatch) => ({
+  onButtonExitUserClick() {
+    dispatch(UserActionCreator.setAuthorizationStatus(AuthorizationStatus.NO_AUTH));
+    // dispatch(UserActionCreator.setAuthorizationUser({}));
+    localStorage.setItem('authorizationStatus', AuthorizationStatus.NO_AUTH);
+    localStorage.setItem('idUser', '');
+  }
+});
+// АВТОРИЗАЦИЯ ПЕРЕДЕЛАТЬ
+
+export {Header};
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

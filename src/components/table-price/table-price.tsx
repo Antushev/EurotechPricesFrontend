@@ -140,9 +140,9 @@ const getMarkupCompare = (firmName, eurotechPrice, productPrice) => {
 }
 
 const getPriceProduct = (idProduct, idFirm, prices) => {
-    return prices.find((price) => {
-      return price.idProduct === idProduct && price.idFirm === idFirm;
-    });
+  return prices.find((price) => {
+    return price.idProduct === idProduct && price.idFirm === idFirm;
+  });
 }
 
 const getIsLinksByProduct = (product, firm, links) => {
