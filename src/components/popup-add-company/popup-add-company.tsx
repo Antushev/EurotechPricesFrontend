@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 
 import {Operation as DataOperation} from './../../reducer/data/data';
@@ -71,8 +71,8 @@ const PopupAddCompany: React.FunctionComponent<Props> = (props: Props) => {
             }}
           />
             <label className="popup-company__label popup-company__label--check" htmlFor="popup-link-site">
-              <p>Скопируйте ссылку на главную страницу интернет-магазина компании конкурента.</p>
-              <p>Ссылка не должна содержать протокол 'https://' или 'http://', а также 'www' в самом начале</p>
+              <p>Скопируйте ссылку на главную страницу интернет-магазина компании-конкурента.</p>
+              <p>Ссылка не должна содержать протокол «https://» или «http://», а также «www» в самом начале</p>
               <p>Верная ссылка: eurotechspb.com</p>
               <p>Неверная ссылка: https://eurotechspb.com или www.eurotechspb.com</p>
             </label>

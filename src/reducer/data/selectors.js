@@ -20,6 +20,10 @@ const getIsLoadingProduct = (state) => {
   return state[NameSpace.DATA].isLoadingProduct;
 }
 
+const getCurrentProductStats = (state) => {
+  return state[NameSpace.DATA].currentProductStats;
+}
+
 const getFirms = (state) => {
   return state[NameSpace.DATA].firms;
 }
@@ -40,6 +44,10 @@ const getIsLoadingPrice = (state) => {
   return state[NameSpace.DATA].isLoadingPrice;
 }
 
+const getPricesForStats = (state) => {
+  return state[NameSpace.DATA].pricesStats
+}
+
 const getIsLoadingStart = (state) => {
   return state[NameSpace.DATA].isLoadingStart;
 }
@@ -53,11 +61,13 @@ export {
   getProductById,
   getCurrentProductPopup,
   getIsLoadingProduct,
+  getCurrentProductStats,
   getFirms,
   getCurrentFirmPopup,
   getIsLoadingFirm,
   getPrices,
   getIsLoadingPrice,
+  getPricesForStats,
   getIsLoadingStart,
   getLinks
 };

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {DateTime} from 'luxon';
 
@@ -41,6 +41,8 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
     setCurrentProductPopup,
     onButtonDateClick
   } = props;
+
+
 
   const [isShowPopupCompany, setShowPopupCompany] = useState(false);
   const [isShowPopupGood, setShowPopupGood] = useState(false);

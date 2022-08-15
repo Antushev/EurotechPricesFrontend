@@ -21,6 +21,7 @@ const initialState = {
     name: 'Распределитель 1P40',
     isEmailNotification: true
   },
+  currentProductStats: {},
 
   firms: [
     {
@@ -35,6 +36,7 @@ const initialState = {
     name: 'ЕВРОТЕК',
     site: 'eurotechspb.com'
   },
+  currentProductFirm: {},
 
   prices: [
     {
@@ -47,6 +49,7 @@ const initialState = {
       dateParse: '10-08-2022'
     }
   ],
+  pricesStats: [],
 
   links: [
     {
@@ -65,6 +68,7 @@ const ActionType = {
   LOAD_PRODUCTS: 'LOAD_PRODUCTS',
   SET_CURRENT_PRODUCT_POPUP: 'SET_CURRENT_PRODUCT_POPUP',
   SET_IS_LOADING_PRODUCT: 'SET_IS_LOADING_PRODUCT',
+  SET_CURRENT_PRODUCT_STATS: 'SET_CURRENT_PRODUCT_STATS',
 
   LOAD_FIRMS: 'LOAD_FIRMS',
   SET_CURRENT_FIRM_POPUP: 'SET_CURRENT_FIRM_POPUP',
@@ -74,6 +78,7 @@ const ActionType = {
   LOAD_PRICES: 'LOAD_PRICES',
   ADD_PRICE: 'ADD_PRICE',
   SET_IS_LOADING_PRICE: 'SET_IS_LOAD_PRICE',
+  LOAD_PRICES_FOR_STATS: 'GET_PRICES_FOR_STATS',
 
   LOAD_LINKS: 'LOAD_LINKS'
 }
@@ -102,6 +107,12 @@ const ActionCreator = {
     return {
       type: ActionType.SET_IS_LOADING_PRODUCT,
       payload: true
+    }
+  },
+  setCurrentProductStats(product) {
+    return {
+      type: ActionType.SET_CURRENT_PRODUCT_STATS,
+      payload: product
     }
   },
 
@@ -134,6 +145,12 @@ const ActionCreator = {
     return {
       type: ActionType.SET_IS_LOADING_PRICE,
       payload: null
+    }
+  },
+  loadPricesForStats(prices) {
+    return {
+      type: ActionType.LOAD_PRICES_FOR_STATS,
+      payload: prices
     }
   },
 
@@ -247,7 +264,34 @@ const Operation = {
       .catch((error) => {
         console.log(error);
       })
+  },
+
+  getProductById: (idProduct) => (dispatch, getState, api) => {
+    return api.get(`/product/${idProduct}`)
+      .then((response) => {
+        const product = response.data;
+        dispatch(ActionCreator.setCurrentProductStats(product));
+      })
+      .catch((error) => {
+        throw error;
+      })
+  },
+  loadPricesForStats: (idProduct, dateFrom, dateTo) => (dispatch, getState, api) => {
+    return api.post(`/prices-stats/`, {
+      idProduct: idProduct,
+      dateTo: dateTo,
+      dateFrom: dateFrom
+    })
+      .then((response) => {
+        const prices = response.data;
+
+        dispatch(ActionCreator.loadPricesForStats(prices));
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
+
 };
 
 const reducer = (state = initialState, action) => {
@@ -269,6 +313,10 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         isLoadingProduct: !state.isLoadingProduct
       })
+    case ActionType.SET_CURRENT_PRODUCT_STATS:
+      return Object.assign({}, state, {
+        currentProductStats: action.payload
+      })
     case ActionType.LOAD_FIRMS:
       return Object.assign({}, state, {
         firms: action.payload
@@ -288,6 +336,10 @@ const reducer = (state = initialState, action) => {
     case ActionType.SET_IS_LOADING_PRICE:
       return Object.assign({}, state, {
         isLoadingPrice: !state.isLoadingPrice
+      })
+    case ActionType.LOAD_PRICES_FOR_STATS:
+      return Object.assign({}, state, {
+        pricesStats: action.payload
       })
     case ActionType.LOAD_LINKS:
       return Object.assign({}, state, {

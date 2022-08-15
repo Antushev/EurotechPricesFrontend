@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Link, Navigate} from 'react-router-dom';
 
 const ID_FIRM_EUROTECH = 1;
 
@@ -111,10 +112,27 @@ const renderTableStroke = (products, firms, prices, links, onButtonClick) => {
       }
     });
 
-    return <tr key={product.name + product.id} className="table__tr">
-      <td key={product.name + product.id} className="table__td">{product.name}</td>
-      {productsElements}
-    </tr>
+    return (
+     <tr
+       key={product.name + product.id}
+       className="table__tr"
+       onClick={(evt) => {
+         // const currentElement = evt.target as Element;
+         //
+         // if (!currentElement.classList.contains('button--link')) {
+         //   return <Navigate to={`/stats/${product.id}`} />
+         // }
+
+       }}
+     >
+       <td key={product.name + product.id} className="table__td">
+         <Link className="link link--table" to={`/stats/${product.id}`}>
+         {product.name}
+       </Link>
+       </td>
+       {productsElements}
+     </tr>
+    );
   });
 }
 

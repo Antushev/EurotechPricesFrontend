@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <title>Статистика</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" type="image/ico" sizes="152x152" href="img/favicon_152x152.ico">
+  <link rel="icon" type="image/ico" sizes="32x32" href="img/favicon_32x32.ico">
+  <link rel="icon" href="favicon.ico">
+
+  <link rel="stylesheet" href="css/style.min.css">
+</head>
+<body>
+<header class="page-header">
+  <div class="page-header__wrapper container">
+    <nav class="menu">
+      <div class="logo">
+        <img class="logo__img" src="img/logo.png" width="264" height="152" alt="Логотип ООО ЕВРОТЕК">
+      </div>
+
+      <ul class="menu__list">
+        <li class="menu__item">
+          <a class="menu__link" href="index.html">Главная</a>
+        </li>
+        <li class="menu__item menu__item--active">
+          <a class="menu__link" href="stat.html">Статистика</a>
+        </li>
+        <li class="menu__item">
+          <a class="menu__link" href="prices.html">Цены</a>
+        </li>
+      </ul>
+
+      <div class="menu__login">
+        <a class="menu__link-login" href="#">Светлана Павлова</a>
+        <button class="menu__link-login menu__link-login--exit" href="#">Выход</button>
+      </div>
+    </nav>
+  </div>
+
+</header>
+
+<main class="page-content">
+  <div class="page-content__wrapper container">
+    <section class="stats-product page-content__inner">
+      <header class="stats-product__header">
+        <h1 class="header header--1 stats-product__header-1">Распределитель 1P40</h1>
+        <ul class="service-buttons">
+          <li class="service-buttons__item">
+            <svg width="28" height="27" viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.4979 0.939224L9.08038 7.92039L1.43404 9.0435C0.0628285 9.24386 -0.486703 10.947 0.507688 11.9224L6.03964 17.3534L4.73123 25.0253C4.49572 26.4121 5.94544 27.4508 7.15964 26.8022L14 23.1798L20.8404 26.8022C22.0546 27.4455 23.5043 26.4121 23.2688 25.0253L21.9604 17.3534L27.4923 11.9224C28.4867 10.947 27.9372 9.24386 26.566 9.0435L18.9196 7.92039L15.5021 0.939224C14.8897 -0.305153 13.1155 -0.320971 12.4979 0.939224Z" fill="#F0F0F0"/>
+            </svg>
+          </li>
+          <li class="service-buttons__item">
+            <svg width="30" height="27" viewBox="0 0 30 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.9687 4.38308L25.6667 9.14065C25.8646 9.34108 25.8646 9.6681 25.6667 9.86853L14.2917 21.388L9.45833 21.9312C8.8125 22.0051 8.26563 21.4513 8.33854 20.7972L8.875 15.9025L20.25 4.38308C20.4479 4.18265 20.7708 4.18265 20.9687 4.38308ZM29.4062 3.17523L26.8646 0.601289C26.0729 -0.20043 24.7865 -0.20043 23.9896 0.601289L22.1458 2.46845C21.9479 2.66888 21.9479 2.9959 22.1458 3.19633L26.8438 7.9539C27.0417 8.15433 27.3646 8.15433 27.5625 7.9539L29.4062 6.08674C30.1979 5.27974 30.1979 3.97695 29.4062 3.17523V3.17523ZM20 18.2549V23.6243H3.33333V6.74604H15.3021C15.4687 6.74604 15.625 6.67748 15.7448 6.56144L17.8281 4.45165C18.224 4.05079 17.9427 3.37039 17.3854 3.37039H2.5C1.11979 3.37039 0 4.5044 0 5.90213V24.4683C0 25.866 1.11979 27 2.5 27H20.8333C22.2135 27 23.3333 25.866 23.3333 24.4683V16.1451C23.3333 15.5808 22.6615 15.3012 22.2656 15.6968L20.1823 17.8066C20.0677 17.9279 20 18.0862 20 18.2549Z" fill="#F0F0F0"/>
+            </svg>
+          </li>
+        </ul>
+      </header>
+
+      <div class="stats-product__filter">
+        <h2 class="header header--2">График цен</h2>
+
+        <ul class="periods-list stats-product__periods">
+          <li class="periods-list__item periods-list__item--active">
+            день
+          </li>
+          <li class="periods-list__item">
+            неделя
+          </li>
+          <li class="periods-list__item">
+            месяц
+          </li>
+        </ul>
+
+        <div class="stats-product__date">
+          <form>
+            <span>c</span>
+            <label>
+              <input class="input input--date" name="date-from" type="date" alt="Выборка, начиная с данной даты">
+            </label>
+            <span>по</span>
+            <label>
+              <input class="input input--date" name="date-to" type="date" alt="Выборка, заканчивая данной датой">
+            </label>
+          </form>
+        </div>
+      </div>
+
+      <div class="stats-product__graph">
+        <div class="stats-product__graph-block graph">
+
+        </div>
+
+        <ul class="firms-list">
+          <li class="firms-list__item firms-list__item--active firms-list__item--red">
+            ЕВРОТЕК
+          </li>
+          <li class="firms-list__item firms-list__item--active firms-list__item--blue">
+            ПРОМСНАБ
+          </li>
+          <li class="firms-list__item firms-list__item--active firms-list__item--pink">
+            АТМГ
+          </li>
+          <li class="firms-list__item firms-list__item--active firms-list__item--green">
+            Пневмакс
+          </li>
+          <li class="firms-list__item firms-list__item--active firms-list__item--yellow">
+            RM316
+          </li>
+          <li class="firms-list__item">
+            Ингидро
+          </li>
+          <li class="firms-list__item">
+            Аркаим
+          </li>
+        </ul>
+      </div>
+
+      <div class="stats-product__prices-stats">
+        <ul class="prices-stats">
+          <li class="prices-stats__item">
+            <h3 class="prices-stats__header">минимальная</h3>
+            <p class="prices-stats__price">7014,14 руб.</p>
+            <div class="prices-stats__firm-info">
+              <span class="prices-stats__firm">
+                ПРОМСНАБ
+              </span>
+              <span class="prices-stats__date">
+                18.06.2022
+              </span>
+            </div>
+          </li>
+
+          <li class="prices-stats__item">
+            <h3 class="prices-stats__header">средняя</h3>
+            <p class="prices-stats__price">8419,14 руб.</p>
+          </li>
+
+          <li class="prices-stats__item">
+            <h3 class="prices-stats__header">максимальная</h3>
+            <p class="prices-stats__price">10418,41 руб.</p>
+            <div class="prices-stats__firm-info">
+              <span class="prices-stats__firm">
+                АТМГ
+              </span>
+              <span class="prices-stats__date">
+                29.06.2022
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="page-footer">
+  <div class="page-footer__wrapper container">
+    <p class="page-footer__contacts">
+      По всем вопросам: +7 (931) 405-04-66
+    </p>
+  </div>
+</footer>
+</body>
+</html>

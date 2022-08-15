@@ -18,6 +18,7 @@ import PrivateRoute from '../private-route/private-route';
 import Main from '../main/main';
 import MainPrices from '../main-prices/main-prices';
 import MainStats from '../main-stats/main-stats';
+import ProductStats from '../product-stats/product-stats';
 import Header from '../header/header';
 import Footer from '../footer/footer';
 
@@ -79,6 +80,21 @@ const App: React.FunctionComponent<Props> = (props: Props) => {
               menuItems={menuItems}
             />
             <MainStats />
+            <Footer />
+          </PrivateRoute>
+        }/>
+
+        <Route path="/stats/:id" element={
+          <PrivateRoute>
+            <Header
+              menuItems={menuItems}
+            />
+            <ProductStats
+              firms={firms}
+              products={products}
+              links={links}
+              prices={prices}
+            />
             <Footer />
           </PrivateRoute>
         }/>

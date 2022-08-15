@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const getPrice = () => {
-  axios.get('http://185.20.225.130:1481/api/price')
+  axios.get('https://eurotech.antushev.com/api/price')
     .then((res) => {
       if (res.status === 200) {
         console.log(res.data);
