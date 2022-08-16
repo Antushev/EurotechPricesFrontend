@@ -4,7 +4,7 @@ interface Props {
 
 }
 
-const MainStats: React.FunctionComponent = (props: Props) => {
+const MainFavorites: React.FunctionComponent = (props: Props) => {
   return (
     <main className="page-content">
       <div className="page-content__wrapper container">
@@ -14,4 +14,4 @@ const MainStats: React.FunctionComponent = (props: Props) => {
   );
 }
 
-export default MainStats;
+export default MainFavorites;

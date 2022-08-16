@@ -12,6 +12,10 @@ const getProductById = (state, idProduct) => {
   })]
 }
 
+const getCurrentProducts = (state) => {
+  return state[NameSpace.DATA].currentProducts;
+}
+
 const getCurrentProductPopup = (state) => {
   return state[NameSpace.DATA].currentProductPopup;
 }
@@ -60,6 +64,7 @@ export {
   getProducts,
   getProductById,
   getCurrentProductPopup,
+  getCurrentProducts,
   getIsLoadingProduct,
   getCurrentProductStats,
   getFirms,

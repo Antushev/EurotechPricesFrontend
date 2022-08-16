@@ -66,6 +66,7 @@ const ActionType = {
   SET_IS_LOADING_START: 'SET_IS_LOADING_START',
 
   LOAD_PRODUCTS: 'LOAD_PRODUCTS',
+  SET_CURRENT_PRODUCTS: 'SET_CURRENT_PRODUCTS',
   SET_CURRENT_PRODUCT_POPUP: 'SET_CURRENT_PRODUCT_POPUP',
   SET_IS_LOADING_PRODUCT: 'SET_IS_LOADING_PRODUCT',
   SET_CURRENT_PRODUCT_STATS: 'SET_CURRENT_PRODUCT_STATS',
@@ -94,6 +95,12 @@ const ActionCreator = {
   loadProducts(products) {
     return {
       type: ActionType.LOAD_PRODUCTS,
+      payload: products
+    }
+  },
+  setCurrentProducts(products) {
+    return {
+      type: ActionType.SET_CURRENT_PRODUCTS,
       payload: products
     }
   },
@@ -169,6 +176,8 @@ const Operation = {
       .then((response) => {
         const products = response.data;
 
+        console.log(products);
+
         dispatch(ActionCreator.loadProducts(products));
         dispatch(ActionCreator.setIsLoadingStart());
       })
@@ -176,11 +185,13 @@ const Operation = {
         throw error;
       })
   },
-  addProduct: (name, idAuthor) => (dispatch, getState, api) => {
+  addProduct: (name, idAuthor, isGroup = false, idParent = null) => (dispatch, getState, api) => {
     dispatch(ActionCreator.setIsLoadingProduct());
     api.post('/product', {
       name: name,
-      idAuthor: idAuthor
+      idAuthor: idAuthor,
+      isGroup: isGroup,
+      idParent: idParent
     })
       .then(() => {
         dispatch(Operation.loadProducts());
@@ -305,6 +316,10 @@ const reducer = (state = initialState, action) => {
         products: action.payload,
         currentProducts: action.payload
       })
+    case ActionType.SET_CURRENT_PRODUCTS:
+      return Object.assign({}, state, {
+        currentProducts: action.payload
+      });
     case ActionType.SET_CURRENT_PRODUCT_POPUP:
       return Object.assign({}, state, {
         currentProductPopup: action.payload

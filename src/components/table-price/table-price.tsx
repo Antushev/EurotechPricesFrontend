@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {Link, Navigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import {getParentProduct} from '../../utils/common.js';
 
 const ID_FIRM_EUROTECH = 1;
 
@@ -8,6 +9,7 @@ interface Props {
   products: Product[],
   prices: Price[],
   links: Link[],
+  currentIdGroup,
   isLoadingStart: boolean,
   onButtonAddPriceClick: (evt: any, product: any, firm: any) => any
 }
@@ -18,10 +20,13 @@ const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
     products,
     prices,
     links,
+    currentIdGroup,
     isLoadingStart,
-    onButtonAddPriceClick} = props;
+    onButtonAddPriceClick
+  } = props;
 
   const firmsNames = getAllFirmsNames(firms);
+  const parentProduct = getParentProduct(products, currentIdGroup);
 
   if (!isLoadingStart) {
     return (
@@ -34,7 +39,28 @@ const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
         </thead>
 
         <tbody>
-        {renderTableStroke(products, firms, prices, links, onButtonAddPriceClick)}
+        {currentIdGroup !== null &&
+          <tr className="table__tr">
+            <td className="table__td">
+              <Link
+                className="link link--table"
+                to={parentProduct === null
+                  ? '/prices'
+                  : `/prices/${parentProduct.id}`
+                }
+              >
+                <svg className="table__td-icon" width="25" height="17" viewBox="0 0 25 17">
+                  <path
+                    d="M24.8565 9.89987L21.7131 15.2885C21.4685 15.7079 21.1182 16.0558 20.6972 16.2976C20.2763 16.5394 19.7992 16.6667 19.3138 16.6667H1.95421C1.15026 16.6667 0.649349 15.7946 1.05443 15.1001L4.19783 9.71146C4.44246 9.2921 4.79272 8.94418 5.21372 8.70238C5.63471 8.46057 6.11173 8.33333 6.59722 8.33333H23.9568C24.7607 8.33333 25.2616 9.20542 24.8565 9.89987ZM6.59722 6.94444H20.8333V4.86111C20.8333 3.7105 19.9006 2.77778 18.75 2.77778H11.8056L9.02778 0H2.08333C0.932726 0 0 0.932726 0 2.08333V14.1513L2.99813 9.01163C3.74193 7.73654 5.12105 6.94444 6.59722 6.94444Z"
+                    fill="black"/>
+                </svg>
+                ...
+              </Link>
+            </td>
+          </tr>
+          }
+
+          {renderTableStroke(products, firms, prices, links, currentIdGroup, onButtonAddPriceClick)}
         </tbody>
       </table>
     );
@@ -59,7 +85,7 @@ const renderHeaderTable = (firms) => {
   });
 }
 
-const renderTableStroke = (products, firms, prices, links, onButtonClick) => {
+const renderTableStroke = (products, firms, prices, links, currentIdGroup, onButtonClick) => {
   if (products.length === 0) {
     return <tr key={Math.random()} className="table__tr">
       <td className="table__td" colSpan={10}><h4>Ничего не найдено. Отчистите поле ввода или отредактируйте название товара в поисковой строке.</h4></td>
@@ -111,6 +137,23 @@ const renderTableStroke = (products, firms, prices, links, onButtonClick) => {
 
       }
     });
+
+    if (product.is_group) {
+      return (
+        <tr key={product.id + product.name} className="table__tr">
+          <td className="table__td">
+            <Link className="link link--table" to={`/prices/${product.id}`}>
+              <svg className="table__td-icon" width="25" height="19" viewBox="0 0 25 19" fill="none">
+                <path
+                  d="M22.6562 3.125H13.2812L10.1562 0H2.34375C1.04932 0 0 1.04932 0 2.34375V16.4062C0 17.7007 1.04932 18.75 2.34375 18.75H22.6562C23.9507 18.75 25 17.7007 25 16.4062V5.46875C25 4.17432 23.9507 3.125 22.6562 3.125Z"
+                  fill="black"/>
+              </svg>
+              {product.name}
+            </Link>
+          </td>
+        </tr>
+      );
+    }
 
     return (
      <tr

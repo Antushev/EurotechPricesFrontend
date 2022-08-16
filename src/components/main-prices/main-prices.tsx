@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
+import {useParams} from 'react-router-dom';
 import {DateTime} from 'luxon';
 
 import {Operation as DataOperation} from '../../reducer/data/data.js';
 import {ActionCreator as DataActionCreator} from '../../reducer/data/data.js';
 import {
+  getCurrentProducts,
   getCurrentFirmPopup,
   getCurrentProductPopup,
   getIsLoadingStart
@@ -13,6 +15,7 @@ import {
 import TablePrice from '../table-price/table-price';
 import PopupAddCompany from '../popup-add-company/popup-add-company';
 import PopupAddGood from '../popup-add-good/popup-add-good';
+import PopupAddGroup from '../popup-add-group/popup-add-group';
 import PopupAddPrice from '../popup-add-price/popup-add-price';
 
 interface Props {
@@ -42,17 +45,22 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
     onButtonDateClick
   } = props;
 
+  const params = useParams();
 
+  const currentIdGroup = typeof params.idGroup === 'undefined' ? null : Number(params.idGroup);
+
+  const currentProducts = getProductsByIdParent(products, currentIdGroup);
 
   const [isShowPopupCompany, setShowPopupCompany] = useState(false);
   const [isShowPopupGood, setShowPopupGood] = useState(false);
   const [isShowPopupPrice, setShowPopupPrice] = useState(false);
+  const [isShowPopupGroup, setShowPopupGroup] = useState(false);
 
   const [textSearch, setTextSearch] = useState('');
   const nowDate = DateTime.local().toFormat('y-MM-dd');
   const [dateSearch, setDateSearch] = useState(String(nowDate));
 
-  const filtersProduct = acceptFilter(products, textSearch);
+  const filtersProduct = acceptFilter(currentProducts, textSearch);
 
   return (
     <div>
@@ -118,9 +126,19 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
                 onClick={() => {
                   setShowPopupCompany(!isShowPopupCompany);
                   setShowPopupGood(false);
+                  setShowPopupPrice(false);
                 }}
               >
                 Добавить компанию
+              </button>
+
+              <button
+                className="button button--rounded table-price__button table-price__button--add-group"
+                onClick={() => {
+                  setShowPopupGroup(!isShowPopupGroup);
+                }}
+              >
+                Добавить группу
               </button>
 
               <button
@@ -128,6 +146,7 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
                 onClick={() => {
                   setShowPopupGood(!isShowPopupGood);
                   setShowPopupCompany(false)
+                  setShowPopupPrice(false);
                 }}
               >
                 Добавить товар
@@ -140,6 +159,7 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
                 products={filtersProduct}
                 prices={prices}
                 links={links}
+                currentIdGroup={currentIdGroup}
                 isLoadingStart={isLoadingStart}
                 onButtonAddPriceClick={(evt, product, firm) => {
                   setCurrentProductPopup(product);
@@ -156,9 +176,19 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
       </main>
 
       <PopupAddGood
+        idParent={currentIdGroup}
         isShowPopup={isShowPopupGood}
         onClosePopupClick={() => {
           setShowPopupGood(!isShowPopupGood)
+        }}
+      />
+
+      <PopupAddGroup
+        products={products}
+        isShowPopupGroup={isShowPopupGroup}
+        idParent={currentIdGroup}
+        onClosePopupClick={() => {
+          setShowPopupGroup(!isShowPopupGroup);
         }}
       />
 
@@ -190,8 +220,15 @@ const acceptFilter = (products, textSearch) => {
   });
 }
 
+const getProductsByIdParent = (products, idGroup) => {
+  return products.filter((product) => {
+    return product.id_parent === idGroup;
+  });
+}
+
 const mapStateToProps = (state) => {
   return {
+    currentProducts: getCurrentProducts(state),
     currentProductPopup: getCurrentProductPopup(state),
     currentFirmPopup: getCurrentFirmPopup(state),
     isLoadingStart: getIsLoadingStart(state)
@@ -199,6 +236,9 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+  setCurrentProducts(products) {
+    dispatch(DataActionCreator.setCurrentProducts(products));
+  },
   setCurrentProductPopup(product) {
     dispatch(DataActionCreator.setCurrentProductPopup(product));
   },

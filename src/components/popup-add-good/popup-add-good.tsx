@@ -15,14 +15,16 @@ const StateForm = {
 }
 
 interface Props {
+  idParent: number,
   isShowPopup: boolean,
   isLoadingProduct: boolean,
   onClosePopupClick: () => void,
-  onButtonAddProductClick: (name: string, idAuthor: number) => void
+  onButtonAddProductClick: (name: string, idAuthor: number, isGroup: boolean, idParent: number) => void
 }
 
 const PopupAddGood: React.FunctionComponent<Props> = (props: Props) => {
   const {
+    idParent,
     isShowPopup,
     onClosePopupClick,
     isLoadingProduct,
@@ -105,7 +107,7 @@ const PopupAddGood: React.FunctionComponent<Props> = (props: Props) => {
           onClick={(evt) => {
             evt.preventDefault();
             if (name !== '') {
-              onButtonAddProductClick(name, 1);
+              onButtonAddProductClick(name, 1, false, idParent);
 
               setStateForm(StateForm.SUCCESS)
               setName('');
@@ -128,8 +130,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  onButtonAddProductClick(name, idAuthor) {
-    dispatch(ProductsOperation.addProduct(name, idAuthor));
+  onButtonAddProductClick(name, idAuthor, isGroup, idParent) {
+    dispatch(ProductsOperation.addProduct(name, idAuthor, isGroup, idParent));
   }
 })
 

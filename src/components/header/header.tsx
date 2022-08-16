@@ -31,10 +31,10 @@ const Header: React.FunctionComponent<Props> = (props: Props) => {
               <Link className="menu__link" to="/">О сервисе</Link>
             </li>
             <li className="menu__item">
-              <Link className="menu__link" to="/prices">Цены</Link>
+              <Link className="menu__link" to="/prices">Цены и остатки</Link>
             </li>
             <li className="menu__item">
-              <Link className="menu__link" to="/stats">Статистика</Link>
+              <Link className="menu__link" to="/favorites">Избранное</Link>
             </li>
           </ul>
 
