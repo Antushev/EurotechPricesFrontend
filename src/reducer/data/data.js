@@ -214,8 +214,6 @@ const Operation = {
       .then((response) => {
         const firms = response.data;
 
-        console.log(firms);
-
         dispatch(ActionCreator.loadFirms(firms));
       })
       .catch((error) => {
@@ -245,8 +243,8 @@ const Operation = {
       firms: firms,
       idUser: idUser
     })
-      .then((response) => {
-        console.log(response.data);
+      .then(() => {
+
       })
       .catch((error) => {
         throw error;

@@ -20,18 +20,8 @@ const getPrice = (api, link) => {
     })
 }
 
-const getUserEurotech = (api) => {
-  return api.get('/user')
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((error) => {
-      throw error;
-    })
-}
-
 export {
   getProductById,
   getParentProduct,
   getPrice,
-  getUserEurotech};
+};

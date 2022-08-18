@@ -1,10 +1,6 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 
-import {getPrice} from '../../utils/common.js';
-
-import {api} from '../../api.js';
-
 import {Operation as ProductsOperation} from '../../reducer/data/data';
 import {getIsLoadingProduct} from '../../reducer/data/selectors.js';
 
