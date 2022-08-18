@@ -220,11 +220,12 @@ const Operation = {
         throw error;
       })
   },
-  addFirm: (firm) => (dispatch, getState, api) => {
+  addFirm: (firm, idUser) => (dispatch, getState, api) => {
     dispatch(ActionCreator.setIsLoadingFirm());
     return api.post('/firm', {
       name: firm.name,
-      site: firm.site
+      site: firm.site,
+      idUser: idUser
     })
       .then((response) => {
         const firms = response.data;

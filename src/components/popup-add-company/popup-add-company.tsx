@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 
 import {Operation as DataOperation} from './../../reducer/data/data';
-import {ActionCreator as DataActionCreator} from '../../reducer/data/data';
 import {getIsLoadingFirm} from './../../reducer/data/selectors';
+
+import {getUser} from './../../reducer/user/selectors';
 
 const StateForm = {
   START: 1,
@@ -12,19 +13,23 @@ const StateForm = {
 }
 
 interface Props {
+  user: User,
   isShowPopup: boolean,
   isLoadingFirm: boolean,
   onClosePopupClick: () => void,
-  onButtonAddFirmClick: (firm: {name: string, site: string}) => void
+  onButtonAddFirmClick: (firm: {name: string, site: string}, idUser: number) => void
 }
 
 const PopupAddCompany: React.FunctionComponent<Props> = (props: Props) => {
   const {
+    user,
     isShowPopup,
     isLoadingFirm,
     onButtonAddFirmClick,
     onClosePopupClick
   } = props;
+
+  console.log(user.id);
 
   const [name, setName] = useState('');
   const [site, setSite] = useState('');
@@ -102,7 +107,6 @@ const PopupAddCompany: React.FunctionComponent<Props> = (props: Props) => {
         : ''
       }
 
-
       <button
         className="button popup-company__button"
         onClick={(evt) => {
@@ -115,7 +119,7 @@ const PopupAddCompany: React.FunctionComponent<Props> = (props: Props) => {
               name,
               site: validSite
             }
-            onButtonAddFirmClick(firm);
+            onButtonAddFirmClick(firm, user.id);
           } else {
             setStateForm(StateForm.ERROR);
           }
@@ -133,13 +137,14 @@ const validSiteFirm = (site) => {
 
 const mapStateToProps = (state) => {
   return {
+    user: getUser(state),
     isLoadingFirm: getIsLoadingFirm(state)
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  onButtonAddFirmClick(firm) {
-    dispatch(DataOperation.addFirm(firm));
+  onButtonAddFirmClick(firm, idUser) {
+    dispatch(DataOperation.addFirm(firm, idUser));
   }
 });
 
