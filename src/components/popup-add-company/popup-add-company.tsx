@@ -29,8 +29,6 @@ const PopupAddCompany: React.FunctionComponent<Props> = (props: Props) => {
     onClosePopupClick
   } = props;
 
-  console.log(user.id);
-
   const [name, setName] = useState('');
   const [site, setSite] = useState('');
   const [stateForm, setStateForm] = useState(StateForm.START);
