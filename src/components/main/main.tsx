@@ -21,7 +21,7 @@ const Main: React.FunctionComponent<Props> = (props: Props) => {
           </p>
 
           <p className="text info-project__text">
-            Динамику изменения цен и наличия товаров можно посмотреть в разделе <Link className="link" to="/stats">«Статистика»</Link>.
+            Динамику изменения цен и наличия товаров можно посмотреть, кликнув на товар в таблице товаров.
           </p>
         </section>
 

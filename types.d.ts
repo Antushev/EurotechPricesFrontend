@@ -17,11 +17,6 @@ interface Product {
   }[]
 }
 
-interface Menu {
-  name: string,
-  menuLink: string
-}
-
 interface Link {
   id: number,
   idFirm: number,
@@ -39,5 +34,19 @@ interface Price {
   count: number,
   dateParse: string
 }
+
+interface User {
+  id: number,
+  firstName: string,
+  lastName: string,
+  login: string,
+  auth: string
+}
+
+interface Menu {
+  name: string,
+  menuLink: string
+}
+
 
 

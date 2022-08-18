@@ -9,9 +9,12 @@ interface Props {
   products: Product[],
   prices: Price[],
   links: Link[],
+  textSearch: string,
   currentIdGroup,
   isLoadingStart: boolean,
-  onButtonAddPriceClick: (evt: any, product: any, firm: any) => any
+  onButtonAddPriceClick: (evt: any, product: any, firm: any) => any,
+  onThMouseOver: () => void,
+  onThMouseOut: () => void
 }
 
 const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
@@ -20,21 +23,30 @@ const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
     products,
     prices,
     links,
+    textSearch,
     currentIdGroup,
     isLoadingStart,
-    onButtonAddPriceClick
+    onButtonAddPriceClick,
+    onThMouseOver,
+    onThMouseOut
   } = props;
 
-  const firmsNames = getAllFirmsNames(firms);
   const parentProduct = getParentProduct(products, currentIdGroup);
 
   if (!isLoadingStart) {
     return (
       <table className="table table-price__table">
-        <thead>
+        <thead
+          onMouseOver={() => {
+            onThMouseOver();
+          }}
+          onMouseOut={() => {
+            onThMouseOut();
+          }}
+        >
         <tr className="table__tr">
           <th className="table__th">Товары</th>
-          {renderHeaderTable(firmsNames)}
+          {renderHeaderTable(firms)}
         </tr>
         </thead>
 
@@ -60,7 +72,7 @@ const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
           </tr>
           }
 
-          {renderTableStroke(products, firms, prices, links, currentIdGroup, onButtonAddPriceClick)}
+          {renderTableStroke(products, firms, prices, links, textSearch, currentIdGroup, onButtonAddPriceClick)}
         </tbody>
       </table>
     );
@@ -69,8 +81,6 @@ const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
       <p>Идет загрузка...</p>
     );
   }
-
-
 }
 
 const getAllFirmsNames = (firms) => {
@@ -80,21 +90,30 @@ const getAllFirmsNames = (firms) => {
 }
 
 const renderHeaderTable = (firms) => {
-  return firms.map((firm) => {
-    return <th key={Math.random()} className="table__th">{firm}</th>
+  const activeFirms = firms.filter((firm) => firm.isActive);
+
+  return activeFirms.map((firm) => {
+    return <th key={Math.random()} className="table__th">{firm.name}</th>
   });
 }
 
-const renderTableStroke = (products, firms, prices, links, currentIdGroup, onButtonClick) => {
-  if (products.length === 0) {
+const renderTableStroke = (products, firms, prices, links, textSearch, currentIdGroup, onButtonClick) => {
+  if (products.length === 0 && textSearch !== '') {
     return <tr key={Math.random()} className="table__tr">
       <td className="table__td" colSpan={10}><h4>Ничего не найдено. Отчистите поле ввода или отредактируйте название товара в поисковой строке.</h4></td>
     </tr>
+  } else if (products.length === 0 && textSearch === '') {
+    return <tr key={Math.random()} className="table__tr">
+      <td className="table__td" colSpan={10}><h4>В данной подгруппе нет товаров.</h4></td>
+    </tr>
   }
+
   return products.map((product) => {
     const eurotechPrice = getPriceProduct(product.id, ID_FIRM_EUROTECH, prices);
+    const activeFirms = firms.filter((firm) => firm.isActive);
 
-    const productsElements = firms.map((firm) => {
+
+    const productsElements = activeFirms.map((firm) => {
       const isProductByLinksArray = getIsLinksByProduct(product, firm, links);
       const priceFind = getPriceProduct(product.id, firm.id, prices);
 

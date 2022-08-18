@@ -56,13 +56,13 @@ if (localStorage.getItem('authorizationStatus') === AuthorizationStatus.AUTH) {
   const idUser = localStorage.getItem('idUser');
 
   store.dispatch(UserOperation.getUserInfo(idUser));
+  store.dispatch(DataOperation.loadPrices(DateTime.local().toFormat('y-MM-dd')));
+  store.dispatch(DataOperation.loadProducts());
+  store.dispatch(DataOperation.loadFirms(idUser));
+  store.dispatch(DataOperation.loadLinks());
 }
 // АВТОРИЗАЦИЯ ПЕРЕДЕЛАТЬ
 
-store.dispatch(DataOperation.loadPrices(DateTime.local().toFormat('y-MM-dd')));
-store.dispatch(DataOperation.loadProducts());
-store.dispatch(DataOperation.loadFirms());
-store.dispatch(DataOperation.loadLinks());
 
 
 init();

@@ -17,12 +17,13 @@ import PopupAddCompany from '../popup-add-company/popup-add-company';
 import PopupAddGood from '../popup-add-good/popup-add-good';
 import PopupAddGroup from '../popup-add-group/popup-add-group';
 import PopupAddPrice from '../popup-add-price/popup-add-price';
+import PopupEditShowFirms from '../popup-edit-show-firms/popup-edit-show-firms';
 
 interface Props {
   products: Product[],
   firms: Firm[],
-  links: Link[],
   prices: Price[],
+  links: Link[],
   currentProductPopup: Product,
   currentFirmPopup: Firm,
   isLoadingStart: boolean,
@@ -55,6 +56,8 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
   const [isShowPopupGood, setShowPopupGood] = useState(false);
   const [isShowPopupPrice, setShowPopupPrice] = useState(false);
   const [isShowPopupGroup, setShowPopupGroup] = useState(false);
+  const [isShowButtonEditFirms, setShowButtonEditFirms] = useState(false);
+  const [isShowPopupEditFirms, setShowPopupEditFirms] = useState(false);
 
   const [textSearch, setTextSearch] = useState('');
   const nowDate = DateTime.local().toFormat('y-MM-dd');
@@ -154,11 +157,31 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
             </div>
 
             <div className="table-price__table-wrapper">
+              <div
+                className={isShowButtonEditFirms ? 'table-price__filter-header' : 'table-price__filter-header visually-hidden'}
+                onClick={() => {
+                  setShowPopupEditFirms(true);
+                }}
+                onMouseOver={() => {
+                  setShowButtonEditFirms(true);
+                }}
+                onMouseOut={() => {
+                  setShowButtonEditFirms(false);
+                }}
+              >
+                <svg width="25" height="23" viewBox="0 0 25 23">
+                  <path
+                    d="M17.474 3.60677L21.3889 7.5217C21.5538 7.68663 21.5538 7.95573 21.3889 8.12066L11.9097 17.5998L7.88194 18.0469C7.34375 18.1076 6.88802 17.6519 6.94878 17.1137L7.39583 13.0859L16.875 3.60677C17.0399 3.44184 17.309 3.44184 17.474 3.60677ZM24.5052 2.61285L22.3872 0.494792C21.7274 -0.164931 20.6554 -0.164931 19.9913 0.494792L18.4549 2.03125C18.2899 2.19618 18.2899 2.46528 18.4549 2.63021L22.3698 6.54514C22.5347 6.71007 22.8038 6.71007 22.9687 6.54514L24.5052 5.00868C25.1649 4.34462 25.1649 3.27257 24.5052 2.61285V2.61285ZM16.6667 15.0217V19.4401H2.77778V5.55122H12.7517C12.8906 5.55122 13.0208 5.49479 13.1207 5.39931L14.8568 3.66319C15.1866 3.33333 14.9523 2.77344 14.4878 2.77344H2.08333C0.93316 2.77344 0 3.7066 0 4.85677V20.1345C0 21.2847 0.93316 22.2179 2.08333 22.2179H17.3611C18.5113 22.2179 19.4444 21.2847 19.4444 20.1345V13.2856C19.4444 12.8212 18.8845 12.5911 18.5547 12.9167L16.8186 14.6528C16.7231 14.7526 16.6667 14.8828 16.6667 15.0217Z"
+                    fill="white"/>
+                </svg>
+              </div>
+
               <TablePrice
                 firms={firms}
                 products={filtersProduct}
                 prices={prices}
                 links={links}
+                textSearch={textSearch}
                 currentIdGroup={currentIdGroup}
                 isLoadingStart={isLoadingStart}
                 onButtonAddPriceClick={(evt, product, firm) => {
@@ -168,6 +191,12 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
 
                   setDateSearch(nowDate);
                   onButtonDateClick(nowDate);
+                }}
+                onThMouseOver={() => {
+                  setShowButtonEditFirms(true);
+                }}
+                onThMouseOut={() => {
+                  setShowButtonEditFirms(false);
                 }}
               />
             </div>
@@ -179,7 +208,7 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
         idParent={currentIdGroup}
         isShowPopup={isShowPopupGood}
         onClosePopupClick={() => {
-          setShowPopupGood(!isShowPopupGood)
+          setShowPopupGood(false)
         }}
       />
 
@@ -188,7 +217,7 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
         isShowPopupGroup={isShowPopupGroup}
         idParent={currentIdGroup}
         onClosePopupClick={() => {
-          setShowPopupGroup(!isShowPopupGroup);
+          setShowPopupGroup(false);
         }}
       />
 
@@ -197,14 +226,22 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
         currentFirmPopup={currentFirmPopup}
         isShowPopup={isShowPopupPrice}
         onClosePopupClick={() => {
-          setShowPopupPrice(!isShowPopupPrice)
+          setShowPopupPrice(false)
         }}
       />
 
       <PopupAddCompany
         isShowPopup={isShowPopupCompany}
         onClosePopupClick={() => {
-          setShowPopupCompany(!isShowPopupCompany)
+          setShowPopupCompany(false)
+        }}
+      />
+
+      <PopupEditShowFirms
+        firms={firms}
+        isShowPopup={isShowPopupEditFirms}
+        onClosePopupClick={() => {
+          setShowPopupEditFirms(false);
         }}
       />
     </div>

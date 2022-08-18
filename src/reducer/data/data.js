@@ -75,6 +75,7 @@ const ActionType = {
   SET_CURRENT_FIRM_POPUP: 'SET_CURRENT_FIRM_POPUP',
   SET_FIRM_IN_PRODUCT: 'SET_FIRM_IN_PRODUCT',
   SET_IS_LOADING_FIRM: 'SET_IS_LOADING_FIRM',
+  SET_FIRM_ACTIVE_STATUS: 'SET_FIRM_ACTIVE_STATUS',
 
   LOAD_PRICES: 'LOAD_PRICES',
   ADD_PRICE: 'ADD_PRICE',
@@ -141,6 +142,12 @@ const ActionCreator = {
       payload: true
     }
   },
+  setFirmActiveStatus(idFirm) {
+    return {
+      type: ActionType.SET_FIRM_ACTIVE_STATUS,
+      payload: idFirm
+    }
+  },
 
   loadPrices(prices) {
     return {
@@ -176,8 +183,6 @@ const Operation = {
       .then((response) => {
         const products = response.data;
 
-        console.log(products);
-
         dispatch(ActionCreator.loadProducts(products));
         dispatch(ActionCreator.setIsLoadingStart());
       })
@@ -204,10 +209,12 @@ const Operation = {
       })
   },
 
-  loadFirms: () => (dispatch, getState, api) => {
-    return api.get('/firms')
+  loadFirms: (idUser) => (dispatch, getState, api) => {
+    return api.get(`/firms/${idUser}`)
       .then((response) => {
         const firms = response.data;
+
+        console.log(firms);
 
         dispatch(ActionCreator.loadFirms(firms));
       })
@@ -232,6 +239,18 @@ const Operation = {
       .catch((error) => {
         throw error;
       })
+  },
+  editActiveFirm: (firms, idUser) => (dispatch, getState, api) => {
+    api.post('/firm-active', {
+      firms: firms,
+      idUser: idUser
+    })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        throw error;
+      });
   },
 
   loadPrices: (date) => (dispatch, getState, api) => {
@@ -302,7 +321,6 @@ const Operation = {
         console.log(error);
       })
   }
-
 };
 
 const reducer = (state = initialState, action) => {
@@ -344,6 +362,22 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         isLoadingFirm: !state.isLoadingFirm
       })
+    case ActionType.SET_FIRM_ACTIVE_STATUS:
+      const idFirm = action.payload;
+
+      const newFirms = state.firms.map((firm) => {
+        if (firm.id === idFirm) {
+          return Object.assign({}, firm, {
+            isActive: !firm.isActive
+          });
+        }
+
+        return firm;
+      })
+
+      return Object.assign({}, state, {
+        firms: newFirms
+      });
     case ActionType.LOAD_PRICES:
       return Object.assign({}, state, {
         prices: action.payload

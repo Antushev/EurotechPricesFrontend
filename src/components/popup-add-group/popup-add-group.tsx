@@ -57,7 +57,8 @@ const PopupAddGroup: React.FunctionComponent<Props> = (props: Props) => {
       <div className="popup-group__container">
         <form>
           <label className="popup-group__label" htmlFor="popup-name-company">
-            Введите название компании, которое будет отображаться в общей таблице товаров.
+            Введите название группы, которая будет отображаться в общей таблице товаров.
+            Если вы уже находитесь в какой-либо группе товаров, то новая группа будет создана внутри.
           </label>
           <input
             className="input popup-group__input"
@@ -78,7 +79,7 @@ const PopupAddGroup: React.FunctionComponent<Props> = (props: Props) => {
         ? <div className="popup-price__price-wrapper popup-price__container">
           <div className="popup-price__info">
             <p>
-              Не удалось добавить товар. Пожалуйста, проверьте все ли поля заполнены корректно и отправьте форму снова.
+              Не удалось добавить группу. Пожалуйста, проверьте все ли поля заполнены корректно и отправьте форму снова.
             </p>
           </div>
         </div>
@@ -94,7 +95,7 @@ const PopupAddGroup: React.FunctionComponent<Props> = (props: Props) => {
             <p>
               {typeof parentProduct === 'undefined'
                 ? 'Её можно найти в корневой группе таблицы товаров'
-                : `Её можно найти в подгруппе <b>${parentProduct.name}</b> таблицы товаров`
+                : `Её можно найти в подгруппе ${`parentProduct.name`} таблицы товаров`
               }
               </p>
             <p>Закройте окно или добавьте ещё один товар.</p>
