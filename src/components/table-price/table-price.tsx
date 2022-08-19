@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
+import {ShowTypeInfo} from '../../utils/const.js';
 import {getParentProduct} from '../../utils/common.js';
 
 const ID_FIRM_EUROTECH = 1;
@@ -10,6 +11,7 @@ interface Props {
   prices: Price[],
   links: Link[],
   textSearch: string,
+  showTypeInfo: string,
   currentIdGroup,
   isLoadingStart: boolean,
   onButtonAddPriceClick: (evt: any, product: any, firm: any) => any,
@@ -24,6 +26,7 @@ const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
     prices,
     links,
     textSearch,
+    showTypeInfo,
     currentIdGroup,
     isLoadingStart,
     onButtonAddPriceClick,
@@ -72,7 +75,15 @@ const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
           </tr>
           }
 
-          {renderTableStroke(products, firms, prices, links, textSearch, currentIdGroup, onButtonAddPriceClick)}
+          {renderTableStroke(
+            products,
+            firms,
+            prices,
+            links,
+            textSearch,
+            showTypeInfo,
+            currentIdGroup,
+            onButtonAddPriceClick)}
         </tbody>
       </table>
     );
@@ -97,7 +108,7 @@ const renderHeaderTable = (firms) => {
   });
 }
 
-const renderTableStroke = (products, firms, prices, links, textSearch, currentIdGroup, onButtonClick) => {
+const renderTableStroke = (products, firms, prices, links, textSearch, showTypeInfo, currentIdGroup, onButtonClick) => {
   if (products.length === 0 && textSearch !== '') {
     return <tr key={Math.random()} className="table__tr">
       <td className="table__td" colSpan={10}><h4>Ничего не найдено. Отчистите поле ввода или отредактируйте название товара в поисковой строке.</h4></td>
@@ -121,13 +132,29 @@ const renderTableStroke = (products, firms, prices, links, textSearch, currentId
         if (typeof eurotechPrice !== 'undefined' && firm.id !== ID_FIRM_EUROTECH) {
           return (
             <td key={String(product.id) + String(firm.id)} className="table__td">
-              {getMarkupCompare(firm.name, eurotechPrice.price, priceFind.price)}
+              {showTypeInfo === ShowTypeInfo.PRICE
+                ? getMarkupCompare(
+                  firm.name,
+                  eurotechPrice.price,
+                  priceFind.price,
+                  ShowTypeInfo.PRICE
+                )
+                : getMarkupCompare(
+                  firm.name,
+                  eurotechPrice.count,
+                  priceFind.count,
+                  ShowTypeInfo.COUNT
+                )
+              }
             </td>
           );
         } else {
           return (
             <td key={String(product.id) + String(firm.id)} className="table__td">
-            {priceFind.price}
+            {showTypeInfo === ShowTypeInfo.PRICE
+              ? priceFind.price
+              : priceFind.count
+            }
           </td>
           );
         }
@@ -198,20 +225,22 @@ const renderTableStroke = (products, firms, prices, links, textSearch, currentId
   });
 }
 
-const getMarkupCompare = (firmName, eurotechPrice, productPrice) => {
+const getMarkupCompare = (firmName, eurotechPrice, productPrice, mode = ShowTypeInfo.PRICE) => {
   const comparePrice = Math.floor(Math.abs(eurotechPrice - productPrice) * 100) / 100;
 
   if (eurotechPrice !== null && firmName !== 'ЕВРОТЕК') {
     return (
       <div>
         {productPrice}
-        <span
-          className={eurotechPrice > productPrice
+        {mode === ShowTypeInfo.PRICE &&
+          <span
+            className={eurotechPrice > productPrice
             ? "table__td-compare table__td-compare--more"
             : "table__td-compare table__td-compare--less"}
-        >
+            >
           {eurotechPrice > productPrice ? "(<" + String(comparePrice) + ")" : "(>" + String(comparePrice) + ")"}
-         </span>
+            </span>
+        }
       </div>
     );
   }

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {DateTime} from 'luxon';
+import {ShowTypeInfo} from '../../utils/const';
 
 import {Operation as DataOperation} from '../../reducer/data/data.js';
 import {ActionCreator as DataActionCreator} from '../../reducer/data/data.js';
@@ -58,6 +59,7 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
   const [isShowPopupGroup, setShowPopupGroup] = useState(false);
   const [isShowButtonEditFirms, setShowButtonEditFirms] = useState(false);
   const [isShowPopupEditFirms, setShowPopupEditFirms] = useState(false);
+  const [showTypeInfo, setShowTypeInfo] = useState(ShowTypeInfo.PRICE);
 
   const [textSearch, setTextSearch] = useState('');
   const nowDate = DateTime.local().toFormat('y-MM-dd');
@@ -69,7 +71,27 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
     <div>
       <main className="page-content">
         <div className="page-content__wrapper container">
-          <h1 className="header header">Таблица цен</h1>
+          <div className="page-content__table-header">
+            <h1 className="header page-content__header">Таблица цен</h1>
+            <ul className="toggle-table">
+              <li
+                className={showTypeInfo === ShowTypeInfo.PRICE ? 'toggle-table__item toggle-table__item--active' : 'toggle-table__item'}
+                onClick={() => {
+                  setShowTypeInfo(ShowTypeInfo.PRICE);
+                }}
+              >
+                цены
+              </li>
+              <li
+                className={showTypeInfo === ShowTypeInfo.COUNT ? 'toggle-table__item toggle-table__item--active' : 'toggle-table__item'}
+                onClick={() => {
+                  setShowTypeInfo(ShowTypeInfo.COUNT);
+                }}
+              >
+                наличие
+              </li>
+            </ul>
+          </div>
 
           <div className="table-price">
             <div className="table-price__filters">
@@ -182,6 +204,7 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
                 prices={prices}
                 links={links}
                 textSearch={textSearch}
+                showTypeInfo={showTypeInfo}
                 currentIdGroup={currentIdGroup}
                 isLoadingStart={isLoadingStart}
                 onButtonAddPriceClick={(evt, product, firm) => {

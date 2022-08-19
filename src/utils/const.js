@@ -15,4 +15,9 @@ const AuthorizationStatus = {
   NO_AUTH: 'NO_AUTH'
 }
 
-export {AppRote, TypeScreen, AuthorizationStatus};
+const ShowTypeInfo = {
+  PRICE: 'PRICE',
+  COUNT: 'COUNT'
+}
+
+export {AppRote, TypeScreen, AuthorizationStatus, ShowTypeInfo};
