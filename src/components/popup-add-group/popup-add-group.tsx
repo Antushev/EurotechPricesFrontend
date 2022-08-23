@@ -66,9 +66,10 @@ const PopupAddGroup: React.FunctionComponent<Props> = (props: Props) => {
             name="popup-name-company"
             type="text"
             value={name}
-            alt="Введите название компании для добавления"
+            alt="Введите название группы для добавления"
             placeholder="Название группы"
             onChange={(evt) => {
+              setStateForm(StateForm.START);
               setName(evt.target.value);
             }}
           />

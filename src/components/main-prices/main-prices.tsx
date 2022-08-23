@@ -200,6 +200,7 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
 
               <TablePrice
                 firms={firms}
+                allProducts={products}
                 products={filtersProduct}
                 prices={prices}
                 links={links}

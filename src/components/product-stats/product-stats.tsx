@@ -3,6 +3,9 @@ import {connect} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {DateTime} from 'luxon';
 
+import {LineChart, PieChart} from 'react-chartkick';
+import 'chartkick/chart.js';
+
 import {Operation as DataOperation} from '../../reducer/data/data.js';
 import {getCurrentProductStats, getPricesForStats} from '../../reducer/data/selectors';
 
@@ -34,6 +37,9 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
   let maxPriceFirm: any = "0";
   let minPriceFirm: any = "0";
   let averagePrice: any = "0";
+  let minPriceDate;
+  let maxPriceDate;
+  let pricesForGraph;
 
   const params = useParams();
   const idProduct = Number(params.id);
@@ -42,11 +48,16 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
   const [dateFrom, setDateFrom] = useState(nowDate);
 
   if (currentPrices.length !== 0) {
+    pricesForGraph = getPricesForGraph(currentPrices);
+    console.log(pricesForGraph);
     maxPrice = getMaxPrice(currentPrices);
     maxPriceFirm = getFirmById(maxPrice.idFirm, firms);
     minPrice = getMinPrice(currentPrices);
     minPriceFirm = getFirmById(minPrice.idFirm, firms);
     averagePrice = getAveragePrice(currentPrices);
+
+    minPriceDate = DateTime.fromISO(minPrice.dateParse).setLocale('ru').toFormat('dd.MM.y HH:mm');
+    maxPriceDate = DateTime.fromISO(maxPrice.dateParse).setLocale('ru').toFormat('dd.MM.y HH:mm');
   }
 
   useEffect(() => {
@@ -108,7 +119,7 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
                     onChange={(evt) => {
                       setDateFrom(evt.target.value);
 
-                      loadPricesForStats(idProduct, dateFrom, dateTo);
+                      loadPricesForStats(idProduct, evt.target.value, dateTo);
                     }}
                   />
                 </label>
@@ -122,7 +133,7 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
                     onChange={(evt) => {
                       setDateTo(evt.target.value);
 
-                      loadPricesForStats(idProduct, dateFrom, dateTo);
+                      loadPricesForStats(idProduct, dateFrom, evt.target.value);
                     }}
                   />
                 </label>
@@ -132,7 +143,25 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
 
           <div className="stats-product__graph">
             <div className="stats-product__graph-block graph">
-
+              <LineChart
+                data={pricesForGraph}
+                width="100%"
+                height="100%"
+                xtitle="Дата"
+                ytitle="Цена"
+                curve={true}
+                legend={true}
+                round={100}
+                loading="Загрузка..."
+                empty="На данные даты нет данных о ценах"
+                library={{
+                  fonts: 12
+                }}
+                dataset={{
+                  borderWidth: 4,
+                  fonts: 14
+                }}
+              />
             </div>
 
             <ul className="firms-list">
@@ -170,7 +199,7 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
                 {minPriceFirm.name}
               </span>
                   <span className="prices-stats__date">
-                {minPrice.dateParse}
+                {minPriceDate}
               </span>
                 </div>
               </li>
@@ -188,7 +217,7 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
                 {maxPriceFirm.name}
               </span>
                   <span className="prices-stats__date">
-                {maxPrice.dateParse}
+                {maxPriceDate}
               </span>
                 </div>
               </li>
@@ -238,6 +267,20 @@ const getAveragePrice = (prices) => {
   });
 
   return Math.floor((pricesNum.reduce((a, b) => (a + b)) / prices.length) * 100) / 100;
+}
+
+const getPricesForGraph = (prices) => {
+  console.log(prices);
+
+  let result = {};
+
+  prices.forEach((currentPrice) => {
+    return Object.assign(result, {
+      [DateTime.fromISO(currentPrice.dateParse).setLocale('ru').toFormat('y-MM-dd hh:mm')]: currentPrice.price
+    });
+  });
+
+  return result;
 }
 
 const mapStateToProps = (state) => {

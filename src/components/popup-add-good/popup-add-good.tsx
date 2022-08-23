@@ -68,8 +68,8 @@ const PopupAddGood: React.FunctionComponent<Props> = (props: Props) => {
             alt="Введите название товара"
             placeholder="Введите название товара"
             onChange={(evt) => {
-              setName(evt.target.value)
               setStateForm(StateForm.START);
+              setName(evt.target.value)
             }}
           />
         </div>

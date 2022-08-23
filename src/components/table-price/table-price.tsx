@@ -1,13 +1,14 @@
 import * as React from 'react';
 import {Link} from 'react-router-dom';
 import {ShowTypeInfo} from '../../utils/const.js';
-import {getParentProduct} from '../../utils/common.js';
+import {getProductById, getParentProduct} from '../../utils/common.js';
 
 const ID_FIRM_EUROTECH = 1;
 
 interface Props {
   firms: Firm[],
   products: Product[],
+  allProducts: Product[],
   prices: Price[],
   links: Link[],
   textSearch: string,
@@ -22,6 +23,7 @@ interface Props {
 const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
   const {
     firms,
+    allProducts,
     products,
     prices,
     links,
@@ -34,7 +36,11 @@ const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
     onThMouseOut
   } = props;
 
-  const parentProduct = getParentProduct(products, currentIdGroup);
+  const currentGroup = getProductById(allProducts, currentIdGroup);
+
+  const parentProduct = typeof currentGroup !== 'undefined'
+    ? getProductById(allProducts, currentGroup['id_parent'])
+    : null;
 
   if (!isLoadingStart) {
     return (
@@ -59,7 +65,7 @@ const TablePrice: React.FunctionComponent<Props> = (props: Props) => {
             <td className="table__td">
               <Link
                 className="link link--table"
-                to={parentProduct === null
+                to={typeof parentProduct === 'undefined'
                   ? '/prices'
                   : `/prices/${parentProduct.id}`
                 }
