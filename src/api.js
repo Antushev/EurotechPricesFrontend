@@ -4,7 +4,7 @@ const Error = {
   UNAUTHORIZED: 401
 };
 
-const BASE_URL = 'http://185.20.225.130:4000/api';
+const BASE_URL = 'https://eurotech.antushev.com/api';
 const TIMEOUT = 15000;
 const WITH_CREDENTIALS = false;
 
