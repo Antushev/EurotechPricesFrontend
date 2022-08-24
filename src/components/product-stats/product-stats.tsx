@@ -2,8 +2,9 @@ import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {DateTime} from 'luxon';
+import {getMaxPrice, getMinPrice} from '../../utils/common.js';
 
-import {LineChart, PieChart} from 'react-chartkick';
+import GraphLine from '../../components/graph-line/graph-line';
 import 'chartkick/chart.js';
 
 import {Operation as DataOperation} from '../../reducer/data/data.js';
@@ -40,6 +41,7 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
   let minPriceDate;
   let maxPriceDate;
   let pricesForGraph;
+  let currentFirms;
 
   const params = useParams();
   const idProduct = Number(params.id);
@@ -48,8 +50,9 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
   const [dateFrom, setDateFrom] = useState(nowDate);
 
   if (currentPrices.length !== 0) {
-    pricesForGraph = getPricesForGraph(currentPrices);
-    console.log(pricesForGraph);
+    currentFirms = getCurrentFirmsByPrices(firms, currentPrices)
+    pricesForGraph = getPricesForGraph(currentFirms, currentPrices);
+
     maxPrice = getMaxPrice(currentPrices);
     maxPriceFirm = getFirmById(maxPrice.idFirm, firms);
     minPrice = getMinPrice(currentPrices);
@@ -96,6 +99,9 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
             <h2 className="header header--2">График цен</h2>
 
             <ul className="periods-list stats-product__periods">
+              <li className="periods-list__item">
+                час
+              </li>
               <li className="periods-list__item periods-list__item--active">
                 день
               </li>
@@ -143,49 +149,14 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
 
           <div className="stats-product__graph">
             <div className="stats-product__graph-block graph">
-              <LineChart
-                data={pricesForGraph}
-                width="100%"
-                height="100%"
-                xtitle="Дата"
-                ytitle="Цена"
-                curve={true}
-                legend={true}
-                round={100}
-                loading="Загрузка..."
-                empty="На данные даты нет данных о ценах"
-                library={{
-                  fonts: 12
-                }}
-                dataset={{
-                  borderWidth: 4,
-                  fonts: 14
-                }}
+              <GraphLine
+                firms={currentFirms}
+                prices={currentPrices}
               />
             </div>
 
             <ul className="firms-list">
-              <li className="firms-list__item firms-list__item--active firms-list__item--red">
-                ЕВРОТЕК
-              </li>
-              <li className="firms-list__item firms-list__item--active firms-list__item--blue">
-                ПРОМСНАБ
-              </li>
-              <li className="firms-list__item firms-list__item--active firms-list__item--pink">
-                АТМГ
-              </li>
-              <li className="firms-list__item firms-list__item--active firms-list__item--green">
-                Пневмакс
-              </li>
-              <li className="firms-list__item firms-list__item--active firms-list__item--yellow">
-                RM316
-              </li>
-              <li className="firms-list__item">
-                Ингидро
-              </li>
-              <li className="firms-list__item">
-                Аркаим
-              </li>
+              {renderCompanyList(currentFirms)}
             </ul>
           </div>
 
@@ -235,26 +206,6 @@ const getProductById = (idProduct, products) => {
   });
 }
 
-const getMaxPrice = (prices) => {
-  return prices.reduce((prev, current) => {
-    if (current.price > prev.price) {
-      return current;
-    }
-
-    return prev;
-  })
-}
-
-const getMinPrice = (prices) => {
-  return prices.reduce((prev, current) => {
-    if (prev.price < current.price) {
-      return prev;
-    }
-
-    return current;
-  })
-}
-
 const getFirmById = (idFirm, firms) => {
   return firms.find((firm) => {
     return firm.id === idFirm
@@ -269,18 +220,55 @@ const getAveragePrice = (prices) => {
   return Math.floor((pricesNum.reduce((a, b) => (a + b)) / prices.length) * 100) / 100;
 }
 
-const getPricesForGraph = (prices) => {
-  console.log(prices);
+const getPricesForGraph = (firms, prices) => {
+  let resultPrices = {};
 
-  let result = {};
+  return firms.map((currentFirm) => {
+    const currentResult = {
+      "name": currentFirm.name,
+      "data": null
+    };
 
-  prices.forEach((currentPrice) => {
-    return Object.assign(result, {
-      [DateTime.fromISO(currentPrice.dateParse).setLocale('ru').toFormat('y-MM-dd hh:mm')]: currentPrice.price
+    const currentPrice = prices.filter((price) => {
+      return price.idFirm === currentFirm.id;
+    });
+
+    resultPrices = currentPrice.map((price) => {
+      return Object.assign({}, resultPrices, {
+        [DateTime.fromISO(price.dateParse).setLocale('ru').toFormat('y-MM-dd hh:mm')]: price.price
+      })
+    });
+
+    return Object.assign({}, currentResult, {
+      "data": resultPrices
     });
   });
+}
 
-  return result;
+const getCurrentFirmsByPrices = (firms, prices) => {
+  const currentFirms = firms.filter((findFirm) => {
+    return prices.some((price) => {
+      return findFirm.id === price.idFirm;
+    })
+  });
+
+  return currentFirms.filter((firm) => typeof firm !== 'undefined');
+}
+
+const renderCompanyList = (firms) => {
+  if (typeof firms !== 'undefined') {
+    return firms.map((firm) => {
+      return (
+        <li key={firm.id} className="firms-list__item firms-list__item" style={{
+          backgroundColor: firm.color
+        }}>
+          {firm.name}
+        </li>
+      );
+    })
+  }
+
+  return <li>Нет данных для данного периода</li>;
 }
 
 const mapStateToProps = (state) => {

@@ -72,7 +72,12 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
       <main className="page-content">
         <div className="page-content__wrapper container">
           <div className="page-content__table-header">
-            <h1 className="header page-content__header">Таблица цен</h1>
+            <h1 className="header page-content__header">
+              Таблица {showTypeInfo === ShowTypeInfo.PRICE
+              ? 'цен'
+              : 'наличия'
+            }
+            </h1>
             <ul className="toggle-table">
               <li
                 className={showTypeInfo === ShowTypeInfo.PRICE ? 'toggle-table__item toggle-table__item--active' : 'toggle-table__item'}

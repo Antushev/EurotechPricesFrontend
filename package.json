@@ -57,6 +57,7 @@
     "react-dom": "18.2.0",
     "react-router-dom": "6.3.0",
     "react-test-renderer": "^18.2.0",
-    "selenium": "^2.20.0"
+    "selenium": "^2.20.0",
+    "victory": "^36.6.5"
   }
 }
