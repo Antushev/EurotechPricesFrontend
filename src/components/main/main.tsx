@@ -8,7 +8,7 @@ interface Props {
 const Main: React.FunctionComponent<Props> = (props: Props) => {
 
   useEffect(() => {
-    document.title = 'О проекте'
+    document.title = 'Описание, возможности, инструкции';
   })
 
   return (

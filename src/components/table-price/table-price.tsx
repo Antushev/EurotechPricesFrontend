@@ -280,7 +280,8 @@ const renderTableStroke = (products,
            <ul className={idOpenContextProduct === product.id
              ? 'product-options'
              : 'product-options visually-hidden'
-           }>
+           }
+           >
              <li
                className="product-options__item"
              >

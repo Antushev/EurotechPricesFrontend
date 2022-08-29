@@ -64,6 +64,10 @@ const ProductStats: React.FunctionComponent<Props> = (props: Props) => {
   }
 
   useEffect(() => {
+    document.title = `${currentProduct.name} статистика`;
+  })
+
+  useEffect(() => {
     loadProductById(idProduct);
   }, []);
 
