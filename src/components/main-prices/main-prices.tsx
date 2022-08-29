@@ -65,6 +65,10 @@ const MainPrices: React.FunctionComponent<Props> = (props: Props) => {
   const nowDate = DateTime.local().toFormat('y-MM-dd');
   const [dateSearch, setDateSearch] = useState(String(nowDate));
 
+  useEffect(() => {
+    document.title = `Цены и наличие на ${dateSearch}`;
+  });
+
   const filtersProduct = acceptFilter(currentProducts, textSearch);
 
   return (

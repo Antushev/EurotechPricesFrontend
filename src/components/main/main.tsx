@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
 
 interface Props {
@@ -6,6 +6,10 @@ interface Props {
 }
 
 const Main: React.FunctionComponent<Props> = (props: Props) => {
+
+  useEffect(() => {
+    document.title = 'О проекте'
+  })
 
   return (
     <main className="page-content">

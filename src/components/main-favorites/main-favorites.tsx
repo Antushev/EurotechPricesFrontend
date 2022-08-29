@@ -1,10 +1,15 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 
 interface Props {
 
 }
 
 const MainFavorites: React.FunctionComponent = (props: Props) => {
+
+  useEffect(() => {
+    document.title = 'Избранное';
+  })
+
   return (
     <main className="page-content">
       <div className="page-content__wrapper container">
